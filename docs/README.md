@@ -4,4 +4,4 @@ O FórumHub é uma plataforma interativa projetada para promover discussões e t
 
 ## Diagrama de Classes:
 
-![Diagrama de Classe](docs/diagrama.png)
+![Diagrama de Classe](/docs/diagrama.png)
