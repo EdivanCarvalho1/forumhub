@@ -59,3 +59,93 @@ O sistema deve registrar histórico de edição.
 - Apenas usuários autenticados podem dar likes.
 - Cada usuário pode dar apenas um like por conteúdo.
 - O número total de likes deve ser exibido no conteúdo.
+
+# DDL BANCO DE DADOS PSQL
+
+```sql
+CREATE TABLE users(
+    id_user SERIAL PRIMARY KEY,
+    nickname VARCHAR(50) NOT NULL,
+    user_password TEXT NOT NULL,
+    phone TEXT NOT NULL,
+    signin_date DATE NOT NULL,
+    status VARCHAR(30) NOT NULL,
+    user_role VARCHAR(30) NOT NULL,
+    user_points BIGINT NOT NULL
+);
+
+CREATE TABLE punishment(
+    id_punishment SERIAL PRIMARY KEY,
+    description TEXT NOT NULL,
+    punishment_period INTERVAL NOT NULL
+);
+
+CREATE TABLE punishment_log(
+    id_punishment_log SERIAL PRIMARY KEY,
+    id_user INT NOT NULL,
+    id_punishment INT NOT NULL,
+    start_date DATE NOT NULL,
+    end_date DATE NOT NULL,
+    
+    FOREIGN KEY (id_user) REFERENCES users(id_user),
+    FOREIGN KEY (id_punishment) REFERENCES punishment(id_punishment)
+);
+
+CREATE TABLE category(
+    id_category SERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    creation_date DATE NOT NULL,
+    description TEXT NOT NULL
+);
+
+CREATE TABLE topic(
+    id_topic SERIAL PRIMARY KEY,
+    title VARCHAR(100) NOT NULL,
+    creation_date DATE NOT NULL,
+    id_category INT NOT NULL,
+
+    FOREIGN KEY (id_category) REFERENCES category(id_category)
+);
+
+CREATE TABLE post(
+    id_post SERIAL PRIMARY KEY,
+    likes BIGINT NOT NULL,
+    dislikes BIGINT NOT NULL,
+    post_content TEXT NOT NULL,
+    creation_date DATE NOT NULL,
+    id_user INT NOT NULL,
+    id_topic INT NOT NULL,
+    
+    FOREIGN KEY (id_user) REFERENCES users(id_user),
+    FOREIGN KEY (id_topic) REFERENCES topic(id_topic)
+);
+
+CREATE TABLE post_comments(
+    id_comment SERIAL PRIMARY KEY,
+    comment_content TEXT NOT NULL,
+    likes BIGINT NOT NULL,
+    dislikes BIGINT NOT NULL,
+    creation_date DATE NOT NULL,
+    edit_date DATE,
+    id_user INT NOT NULL,
+    id_post INT NOT NULL,
+
+    FOREIGN KEY (id_user) REFERENCES users(id_user),
+    FOREIGN KEY (id_post) REFERENCES post(id_post)
+);
+
+CREATE TABLE reply(
+    id_reply SERIAL PRIMARY KEY,
+    reply_content TEXT NOT NULL,
+    likes BIGINT NOT NULL,
+    dislikes BIGINT NOT NULL,
+    creation_date DATE NOT NULL,
+    edit_date DATE,
+    id_user INT NOT NULL,
+    id_comment INT NOT NULL,
+
+    FOREIGN KEY (id_user) REFERENCES users(id_user),
+    FOREIGN KEY (id_comment) REFERENCES post_comments(id_comment)
+);
+
+```
