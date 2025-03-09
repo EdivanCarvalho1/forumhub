@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.edu.iff.ccc.bsi.forumhub.model.Topico;
+import br.edu.iff.ccc.bsi.forumhub.model.Topic;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import jakarta.websocket.server.PathParam;
@@ -22,40 +22,40 @@ public class TopicoController {
 
 	@GetMapping("/topico")
 	@Operation(summary = "Retorna todos os tópicos")
-	public ResponseEntity<List<Topico>> getTopico() {
-		List<Topico> listaTopico = new ArrayList<>();
+	public ResponseEntity<List<Topic>> getTopico() {
+		List<Topic> listaTopico = new ArrayList<>();
 
 		return ResponseEntity.ok().body(listaTopico);
 	}
 
 	@GetMapping("/topico/{id}")
 	@Operation(summary = "Retorna um tópico por id")
-	public ResponseEntity<Topico> getTopicoById(@PathParam("id") int id) {
+	public ResponseEntity<Topic> getTopicoById(@PathParam("id") int id) {
 		if (id < 0) {
 			return ResponseEntity.badRequest().build();
 		}
-		Topico topico = new Topico();
+		Topic topico = new Topic();
 		return ResponseEntity.ok().body(topico);
 	}
 
 	@PostMapping("/topico")
 	@Operation(summary = "Adiciona um tópico")
-	public ResponseEntity<Void> postTopico(@RequestBody Topico topico) {
+	public ResponseEntity<Void> postTopico(@RequestBody Topic topico) {
 		if (topico == null) {
 			return ResponseEntity.badRequest().build();
 		}
-		Topico novaTopico = topico;
+		Topic novaTopico = topico;
 
 		return ResponseEntity.status(HttpStatus.CREATED).build();
 	}
 
 	@PutMapping("/topico")
 	@Operation(summary = "Atualiza um tópico")
-	public ResponseEntity<Void> updateTopico(@RequestBody Topico topico) {
+	public ResponseEntity<Void> updateTopico(@RequestBody Topic topico) {
 		if (topico == null) {
 			return ResponseEntity.badRequest().build();
 		}
-		Topico novaTopico = topico;
+		Topic novaTopico = topico;
 
 		return ResponseEntity.noContent().build();
 	}
