@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.edu.iff.ccc.bsi.forumhub.model.Categoria;
+import br.edu.iff.ccc.bsi.forumhub.model.Category;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -24,40 +24,40 @@ public class CategoriaController {
 
 	@GetMapping("/categoria")
 	@Operation(summary = "Retorna todas as categorias")
-	public ResponseEntity<List<Categoria>> getCategoria() {
-		List<Categoria> listaCategoria = new ArrayList<>();
+	public ResponseEntity<List<Category>> getCategoria() {
+		List<Category> listaCategoria = new ArrayList<>();
 
 		return ResponseEntity.ok().body(listaCategoria);
 	}
 
 	@GetMapping("/categoria/{id}")
 	@Operation(summary = "Retorna uma categoria por id")
-	public ResponseEntity<Categoria> getCategoriaById(@PathParam("id") int id) {
+	public ResponseEntity<Category> getCategoriaById(@PathParam("id") int id) {
 		if (id < 0) {
 			return ResponseEntity.badRequest().build();
 		}
-		Categoria categoria = new Categoria();
+		Category categoria = new Category();
 		return ResponseEntity.ok().body(categoria);
 	}
 
 	@PostMapping("/categoria")
 	@Operation(summary = "Adiciona uma nova categoria")
-	public ResponseEntity<Void> postCategoria(@RequestBody Categoria categoria) {
+	public ResponseEntity<Void> postCategoria(@RequestBody Category categoria) {
 		if (categoria == null) {
 			return ResponseEntity.badRequest().build();
 		}
-		Categoria novaCategoria = categoria;
+		Category novaCategoria = categoria;
 
 		return ResponseEntity.status(HttpStatus.CREATED).build();
 	}
 
 	@PutMapping("/categoria")
 	@Operation(summary = "Atualiza uma categoria")
-	public ResponseEntity<Void> updateCategoria(@RequestBody Categoria categoria) {
+	public ResponseEntity<Void> updateCategoria(@RequestBody Category categoria) {
 		if (categoria == null) {
 			return ResponseEntity.badRequest().build();
 		}
-		Categoria novaCategoria = categoria;
+		Category novaCategoria = categoria;
 
 		return ResponseEntity.noContent().build();
 	}

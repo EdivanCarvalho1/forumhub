@@ -16,6 +16,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+
 @RestController
 @RequestMapping(path = "/api/v1")
 @Tag(name = "MainRest", description = "Exemplo de um RestController")
@@ -40,14 +41,14 @@ public class MainRestController {
 
 		return ResponseEntity.ok().header("Content-Type", "application/json").body(listaExemplo);
 	}
-	
-	@Operation(summary="Retorna um exemplo por Id")
+
+	@Operation(summary = "Retorna um exemplo por Id")
 	@GetMapping(path = "/exemplos/{id}")
 	public ResponseEntity<String> getExemploId(@PathVariable("id") int idx) {
 		return ResponseEntity.ok().header("Content-Type", "application/json").body("Exemplo -> " + idx);
 	}
-	
-	@Operation(summary="Atualiza um exemplo por id")
+
+	@Operation(summary = "Atualiza um exemplo por id")
 	@PutMapping(path = "/exemplos/{id}")
 	public String getExemploIdParam(@PathVariable("id") int id, @RequestParam("nome") String nome) {
 		return "Id ->" + id + " nome ->" + nome;
