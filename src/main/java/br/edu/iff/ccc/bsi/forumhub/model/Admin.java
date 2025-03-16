@@ -12,8 +12,8 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-public class Admin extends Person implements Serializable{
-	
+public class Admin extends Person{
+
 	private static final long serialVersionUID = 1L;
 
 	public Admin(Long id, String nickname, String password, String phone, LocalDate signInDate, ROLE role,

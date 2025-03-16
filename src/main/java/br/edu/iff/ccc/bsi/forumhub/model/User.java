@@ -1,6 +1,5 @@
 package br.edu.iff.ccc.bsi.forumhub.model;
 
-import java.io.Serializable;
 import java.time.LocalDate;
 
 import br.edu.iff.ccc.bsi.forumhub.enums.ROLE;
@@ -12,7 +11,7 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-public class User extends Person implements Serializable{
+public class User extends Person{
 
 	/**
 	 * 

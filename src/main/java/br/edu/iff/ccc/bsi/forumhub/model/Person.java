@@ -12,6 +12,8 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Inheritance;
+import jakarta.persistence.InheritanceType;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -25,6 +27,7 @@ import lombok.Setter;
 @EqualsAndHashCode
 @AllArgsConstructor
 @Table(name = "users")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 abstract class Person implements Serializable {
 	
 	/**

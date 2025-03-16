@@ -37,8 +37,6 @@ public class Comment extends Interaction implements Serializable {
 	
 	public Comment(Long id, Post post, Integer likes, Integer dislikes, String content, LocalDateTime creationDate, LocalDateTime editDate,
 			User user) {
-		super(likes, dislikes, content, creationDate, editDate, user);
-		this.id = id;
-		this.post = post;	
+		super(id, likes, dislikes, content, creationDate, editDate, user);
 	}
 }

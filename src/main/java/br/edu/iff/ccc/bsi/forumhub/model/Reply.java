@@ -35,9 +35,7 @@ public class Reply extends Interaction implements Serializable{
 	
 	public Reply(Long id, Comment comment, Integer likes, Integer dislikes, String content, LocalDateTime creationDate, LocalDateTime editDate,
 			User user) {
-		super(likes, dislikes, content, creationDate, editDate, user);
-		this.id = id;
-		this.comment = comment;	
+		super(id, likes, dislikes, content, creationDate, editDate, user);
 	}
 	
 }
