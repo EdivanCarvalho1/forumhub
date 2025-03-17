@@ -14,6 +14,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
@@ -21,6 +22,7 @@ import lombok.Setter;
 @Setter
 @EqualsAndHashCode
 @AllArgsConstructor
+@NoArgsConstructor
 public class Post implements Serializable{
 	/**
 	 * 
@@ -49,9 +51,9 @@ public class Post implements Serializable{
 	private LocalDateTime creationDate;
 	
 	@ManyToOne
-	@JoinColumn(name = "id_user", nullable = false)
+	@JoinColumn(name = "id_person", nullable = false)
 	@NotNull
-	private User user;
+	private Person person;
 	
 	@ManyToOne
 	@JoinColumn(name = "id_topic", nullable = false)

@@ -1,9 +1,8 @@
 package br.edu.iff.ccc.bsi.forumhub.model;
 
 import java.io.Serializable;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
-import br.edu.iff.ccc.bsi.forumhub.enums.ROLE;
 import br.edu.iff.ccc.bsi.forumhub.enums.STATUS;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -17,6 +16,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
@@ -24,8 +24,9 @@ import lombok.Setter;
 @Setter
 @EqualsAndHashCode
 @AllArgsConstructor
-@Table(name = "users")
-abstract class Person implements Serializable {
+@NoArgsConstructor
+@Table(name = "person")
+public class Person implements Serializable {
 	
 	/**
 	 * 
@@ -34,15 +35,14 @@ abstract class Person implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy= GenerationType.IDENTITY)
-	@Column(name = "id_user", nullable = false)
-	@NotNull
+	@Column(name = "id_person", nullable = false)
 	private Long id;
 	
 	@Column(nullable = false)
 	@NotNull
 	private String nickname;
 	
-	@Column(name="user_password", nullable = false)
+	@Column(name="person_password", nullable = false)
 	@NotNull
 	private String password;
 	
@@ -52,19 +52,14 @@ abstract class Person implements Serializable {
 	
 	@Column(name= "signin_date", nullable = false)
 	@NotNull
-	private LocalDate signInDate;
-	
-	@Column(name="user_role", nullable = false)
-	@NotNull
-	@Enumerated(EnumType.STRING)
-	private ROLE role;
+	private LocalDateTime signInDate;
 	
 	@Column(name="status", nullable = false)
 	@NotNull
 	@Enumerated(EnumType.STRING)
 	private STATUS status;
 	
-	@Column(name="user_points", nullable = false)
+	@Column(name="person_points", nullable = false)
 	@NotNull
 	private Integer points;
 	
