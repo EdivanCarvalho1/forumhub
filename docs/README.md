@@ -6,6 +6,12 @@ O FórumHub é uma plataforma interativa projetada para promover discussões e t
 
 ![Diagrama de Classe](/docs/diagrama.png)
 
+
+## Diagrama do Banco de Dados:
+
+![Diagrama Banco de Dados](/docs/diagrama_db.png)
+
+
 ## Histórias de Usuário:
 
 ### Como um usuário, quero criar uma conta no fórum para participar das discussões e acessar funcionalidades exclusivas.
