@@ -11,8 +11,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -36,7 +34,7 @@ public class Comment extends Interaction implements Serializable {
 	private Post post;
 	
 	public Comment(Long id, Post post, Integer likes, Integer dislikes, String content, LocalDateTime creationDate, LocalDateTime editDate,
-			User user) {
+			Person user) {
 		super(id, likes, dislikes, content, creationDate, editDate, user);
 	}
 }

@@ -14,6 +14,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
@@ -21,6 +22,7 @@ import lombok.Setter;
 @Setter
 @EqualsAndHashCode
 @AllArgsConstructor
+@NoArgsConstructor
 public class PunishmentLog implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -32,9 +34,9 @@ public class PunishmentLog implements Serializable {
 	private Long id;
 	
 	@ManyToOne
-	@JoinColumn(name="id_user", nullable = false)
+	@JoinColumn(name="id_person", nullable = false)
 	@NotNull
-	private Person idUser;
+	private Person idPerson;
 	
 	@ManyToOne
 	@JoinColumn(name="id_punishment", nullable = false)

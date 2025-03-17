@@ -18,6 +18,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
@@ -25,7 +26,7 @@ import lombok.Setter;
 @Setter
 @EqualsAndHashCode
 @AllArgsConstructor
-
+@NoArgsConstructor
 public abstract class Interaction implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -55,8 +56,8 @@ public abstract class Interaction implements Serializable {
 	private LocalDateTime editDate;
 	
 	@ManyToOne
-	@JoinColumn(name = "id_user", nullable = false)
+	@JoinColumn(name = "id_person", nullable = false)
 	@NotNull
-	private User user;
+	private Person person;
 	
 }
