@@ -51,4 +51,16 @@ public class PersonService {
 		
 		personRepository.save(updatedPerson);
 	}
+	
+	public Optional<Person> findByNickname(String nickname) {
+		Person person = personRepository.findByNickname(nickname);
+		
+		return Optional.ofNullable(person);
+	}
+	
+	public Optional<List<Person>> findByNicknameAndPhone(String nickname, String phone) {
+		List<Person> personList = personRepository.findByNicknameAndPhone(nickname, phone);
+		
+		return Optional.ofNullable(personList);
+	}
 }

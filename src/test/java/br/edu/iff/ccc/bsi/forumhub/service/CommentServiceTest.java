@@ -45,6 +45,20 @@ public class CommentServiceTest {
         assertNotNull(result);
         assertEquals(mockedComment.getDislikes(), result.getDislikes());
         verify(commentRepository).findById(1L);
-        
     }
+    
+    @Test
+    @DisplayName("Busca por Content em Comment com sucesso.")
+    void testFindByContent() {
+         Comment mockedComment = new Comment(1L, null, 0, 0, "12345", LocalDateTime.now(), null, null );
+         when(commentRepository.findByContent("12345").thenReturn(mockedComment);
+        
+        Comment result = commentService.findOne(1L).orElseThrow(() -> new RuntimeException("Usuário não encontrado!"));
+
+        assertNotNull(result);
+        assertEquals(mockedComment.getDislikes(), result.getDislikes());
+        verify(commentRepository).findById(1L);
+    }
+    
+    
 }

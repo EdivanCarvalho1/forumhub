@@ -50,4 +50,11 @@ public class CommentService {
 		
 		commentRepository.save(updatedComment);
 	}
+	
+	public Optional<Comment> findByContent(String content){
+		
+		Comment comment = commentRepository.findByContent(content);
+		
+		return Optional.ofNullable(comment);
+	}
 }
