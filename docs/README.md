@@ -69,7 +69,7 @@ O sistema deve registrar histórico de edição.
 # DDL BANCO DE DADOS PSQL
 
 ```sql
-CREATE TABLE person(
+CREATE TABLE person (
     id_person SERIAL PRIMARY KEY,
     nickname VARCHAR(50) NOT NULL,
     person_password TEXT NOT NULL,
@@ -79,26 +79,19 @@ CREATE TABLE person(
     person_points BIGINT NOT NULL
 );
 
-CREATE TABLE users(
-    id_user SERIAL PRIMARY KEY,
-    id_person INT NOT NULL,
-
-    FOREIGN KEY (id_person) REFERENCES person(id_person)
+CREATE TABLE roles (
+    id_role SERIAL PRIMARY KEY,
+    role_name VARCHAR(50) NOT NULL UNIQUE,
+    description TEXT
 );
 
-CREATE TABLE admins(
-    id_admin SERIAL PRIMARY KEY,
-    id_person INT NOT NULL,
-
-    FOREIGN KEY (id_person) REFERENCES person(id_person)
-);
-
-CREATE TABLE person_roles(
+CREATE TABLE person_roles (
     id_person_roles SERIAL PRIMARY KEY,
     id_person INT NOT NULL,
     id_role INT NOT NULL,
-    
-    FOREIGN KEY (id_person) REFERENCES person(id_person)
+
+    FOREIGN KEY (id_person) REFERENCES person(id_person),
+    FOREIGN KEY (id_role) REFERENCES roles(id_role)
 );
 
 CREATE TABLE punishment(
