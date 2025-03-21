@@ -74,96 +74,81 @@ CREATE TABLE person (
     nickname VARCHAR(50) NOT NULL,
     person_password TEXT NOT NULL,
     phone TEXT NOT NULL,
-    signin_date DATETIME NOT NULL,
+    signin_date TIMESTAMP NOT NULL,
     status VARCHAR(30) NOT NULL,
     person_points BIGINT NOT NULL
 );
-
 CREATE TABLE roles (
     id_role SERIAL PRIMARY KEY,
     role_name VARCHAR(50) NOT NULL UNIQUE,
     description TEXT
 );
-
 CREATE TABLE person_roles (
     id_person_roles SERIAL PRIMARY KEY,
     id_person INT NOT NULL,
     id_role INT NOT NULL,
-
     FOREIGN KEY (id_person) REFERENCES person(id_person),
     FOREIGN KEY (id_role) REFERENCES roles(id_role)
 );
-
 CREATE TABLE punishment(
     id_punishment SERIAL PRIMARY KEY,
     description TEXT NOT NULL,
     punishment_period INTERVAL NOT NULL
 );
-
 CREATE TABLE punishment_log(
     id_punishment_log SERIAL PRIMARY KEY,
     id_person INT NOT NULL,
     id_punishment INT NOT NULL,
-    start_date DATETIME NOT NULL,
-    end_date DATETIME NOT NULL,
-    
+    start_date TIMESTAMP NOT NULL,
+    end_date TIMESTAMP NOT NULL,
     FOREIGN KEY (id_person) REFERENCES person(id_person),
     FOREIGN KEY (id_punishment) REFERENCES punishment(id_punishment)
 );
-
 CREATE TABLE category(
     id_category SERIAL PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
-    creation_date DATETIME NOT NULL,
+    creation_date TIMESTAMP NOT NULL,
     description TEXT NOT NULL
 );
-
 CREATE TABLE topic(
     id_topic SERIAL PRIMARY KEY,
     title VARCHAR(100) NOT NULL,
-    creation_date DATETIME NOT NULL,
+    creation_date TIMESTAMP NOT NULL,
     id_category INT NOT NULL,
-
     FOREIGN KEY (id_category) REFERENCES category(id_category)
 );
-
 CREATE TABLE post(
     id_post SERIAL PRIMARY KEY,
     likes BIGINT NOT NULL,
     dislikes BIGINT NOT NULL,
     post_content TEXT NOT NULL,
-    creation_date DATETIME NOT NULL,
+    creation_date TIMESTAMP NOT NULL,
     id_person INT NOT NULL,
     id_topic INT NOT NULL,
-    
     FOREIGN KEY (id_person) REFERENCES person(id_person),
     FOREIGN KEY (id_topic) REFERENCES topic(id_topic)
 );
-
 CREATE TABLE post_comments(
     id_comment SERIAL PRIMARY KEY,
     comment_content TEXT NOT NULL,
     likes BIGINT NOT NULL,
     dislikes BIGINT NOT NULL,
-    creation_date DATETIME NOT NULL,
-    edit_date DATETIME,
+    creation_date TIMESTAMP NOT NULL,
+    edit_date TIMESTAMP,
     id_person INT NOT NULL,
     id_post INT NOT NULL,
-
     FOREIGN KEY (id_person) REFERENCES person(id_person),
     FOREIGN KEY (id_post) REFERENCES post(id_post)
 );
-
 CREATE TABLE reply(
     id_reply SERIAL PRIMARY KEY,
     reply_content TEXT NOT NULL,
     likes BIGINT NOT NULL,
     dislikes BIGINT NOT NULL,
-    creation_date DATETIME NOT NULL,
-    edit_date DATETIME,
+    creation_date TIMESTAMP NOT NULL,
+    edit_date TIMESTAMP,
     id_person INT NOT NULL,
     id_comment INT NOT NULL,
-
     FOREIGN KEY (id_person) REFERENCES person(id_person),
     FOREIGN KEY (id_comment) REFERENCES post_comments(id_comment)
 );
