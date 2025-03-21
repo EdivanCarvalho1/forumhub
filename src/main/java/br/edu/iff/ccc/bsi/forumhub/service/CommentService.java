@@ -53,7 +53,7 @@ public class CommentService {
 	
 	public Optional<Comment> findByContent(String content){
 		
-		Comment comment = commentRepository.findByContent(content);
+		Comment comment = commentRepository.findByContent(content).orElseThrow(() -> new RuntimeException("Comentário não encontrado!"));
 		
 		return Optional.ofNullable(comment);
 	}

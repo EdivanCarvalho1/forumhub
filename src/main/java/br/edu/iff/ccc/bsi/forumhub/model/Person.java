@@ -3,6 +3,8 @@ package br.edu.iff.ccc.bsi.forumhub.model;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import br.edu.iff.ccc.bsi.forumhub.enums.STATUS;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -52,6 +54,7 @@ public class Person implements Serializable {
 	
 	@Column(name= "signin_date", nullable = false)
 	@NotNull
+	@JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
 	private LocalDateTime signInDate;
 	
 	@Column(name="status", nullable = false)

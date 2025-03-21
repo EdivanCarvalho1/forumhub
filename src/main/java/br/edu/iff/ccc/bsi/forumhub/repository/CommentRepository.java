@@ -10,5 +10,5 @@ import br.edu.iff.ccc.bsi.forumhub.model.Comment;
 @Repository
 public interface CommentRepository extends JpaRepository<Comment, Long> {
 	
-	public Comment findByContent(String content);
+	public Optional<Comment> findByContent(String content);
 }

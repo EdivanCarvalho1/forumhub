@@ -1,6 +1,7 @@
 package br.edu.iff.ccc.bsi.forumhub.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -55,7 +56,7 @@ public class PersonServiceTest {
     @DisplayName("Busca por Id em Person com sucesso.")
     void testFindByNickName() {
          Person mockedPerson = new Person(1L, "Edivan", "123456789", "123", LocalDateTime.now(), STATUS.ACTIVE, 1);
-         when(personRepository.findByNickname("Edivan"));
+         when(personRepository.findByNickname("Edivan")).thenReturn(Optional.of(mockedPerson));
         
         Person result = personService.findByNickname("Edivan").orElseThrow(() -> new RuntimeException("Usuário não encontrado!"));
 
@@ -66,17 +67,23 @@ public class PersonServiceTest {
     }
     
     @Test
-    @DisplayName("Busca por Id em Person com sucesso.")
+    @DisplayName("Busca por Nickname e Phone em Person com sucesso.")
     void testFindByNicknameAndPhone() {
-         Person mockedPerson = new Person(1L, "Edivan", "123456789", "123", LocalDateTime.now(), STATUS.ACTIVE, 1);
-         when(personRepository.findByNicknameAndPhone("Edivan", "123"));
-        
-        List<Person> result = personService.findByNicknameAndPhone("Edivan", "123").orElseThrow(() -> new RuntimeException("Usuário não encontrado!"));
 
-        assertNotNull(result);
-        assertEquals(mockedPerson.getNickname());
-        verify(personRepository).findById(1L);
+        List<Person> mockedPerson = List.of(new Person(1L, "Edivan", "123456789", "123", 
+                LocalDateTime.now(), STATUS.ACTIVE, 1));
+
+ 
+        when(personRepository.findByNicknameAndPhone("Edivan", "123")).thenReturn(Optional.of(mockedPerson));
+
+
+        List<Person> result = personService.findByNicknameAndPhone("Edivan", "123").orElseThrow(() -> new RuntimeException("Usuário não encontrado!"));
         
+        assertNotNull(result);
+        assertFalse(result.isEmpty());
+        assertEquals(mockedPerson.get(0).getNickname(), result.get(0).getNickname());
+
+        verify(personRepository).findByNicknameAndPhone("Edivan", "123");
     }
 
 }

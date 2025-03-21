@@ -53,13 +53,13 @@ public class PersonService {
 	}
 	
 	public Optional<Person> findByNickname(String nickname) {
-		Person person = personRepository.findByNickname(nickname);
+		Person person = personRepository.findByNickname(nickname).orElseThrow(() -> new RuntimeException("Pessoa não encontrada!"));
 		
 		return Optional.ofNullable(person);
 	}
 	
 	public Optional<List<Person>> findByNicknameAndPhone(String nickname, String phone) {
-		List<Person> personList = personRepository.findByNicknameAndPhone(nickname, phone);
+		List<Person> personList = personRepository.findByNicknameAndPhone(nickname, phone).orElseThrow(() -> new RuntimeException("Pessoa não encontrada!"));
 		
 		return Optional.ofNullable(personList);
 	}
