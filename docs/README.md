@@ -74,7 +74,7 @@ CREATE TABLE person (
     nickname VARCHAR(50) NOT NULL,
     person_password TEXT NOT NULL,
     phone TEXT NOT NULL,
-    signin_date DATE NOT NULL,
+    signin_date DATETIME NOT NULL,
     status VARCHAR(30) NOT NULL,
     person_points BIGINT NOT NULL
 );
@@ -104,8 +104,8 @@ CREATE TABLE punishment_log(
     id_punishment_log SERIAL PRIMARY KEY,
     id_person INT NOT NULL,
     id_punishment INT NOT NULL,
-    start_date DATE NOT NULL,
-    end_date DATE NOT NULL,
+    start_date DATETIME NOT NULL,
+    end_date DATETIME NOT NULL,
     
     FOREIGN KEY (id_person) REFERENCES person(id_person),
     FOREIGN KEY (id_punishment) REFERENCES punishment(id_punishment)
@@ -114,14 +114,14 @@ CREATE TABLE punishment_log(
 CREATE TABLE category(
     id_category SERIAL PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
-    creation_date DATE NOT NULL,
+    creation_date DATETIME NOT NULL,
     description TEXT NOT NULL
 );
 
 CREATE TABLE topic(
     id_topic SERIAL PRIMARY KEY,
     title VARCHAR(100) NOT NULL,
-    creation_date DATE NOT NULL,
+    creation_date DATETIME NOT NULL,
     id_category INT NOT NULL,
 
     FOREIGN KEY (id_category) REFERENCES category(id_category)
@@ -132,7 +132,7 @@ CREATE TABLE post(
     likes BIGINT NOT NULL,
     dislikes BIGINT NOT NULL,
     post_content TEXT NOT NULL,
-    creation_date DATE NOT NULL,
+    creation_date DATETIME NOT NULL,
     id_person INT NOT NULL,
     id_topic INT NOT NULL,
     
@@ -145,8 +145,8 @@ CREATE TABLE post_comments(
     comment_content TEXT NOT NULL,
     likes BIGINT NOT NULL,
     dislikes BIGINT NOT NULL,
-    creation_date DATE NOT NULL,
-    edit_date DATE,
+    creation_date DATETIME NOT NULL,
+    edit_date DATETIME,
     id_person INT NOT NULL,
     id_post INT NOT NULL,
 
@@ -159,8 +159,8 @@ CREATE TABLE reply(
     reply_content TEXT NOT NULL,
     likes BIGINT NOT NULL,
     dislikes BIGINT NOT NULL,
-    creation_date DATE NOT NULL,
-    edit_date DATE,
+    creation_date DATETIME NOT NULL,
+    edit_date DATETIME,
     id_person INT NOT NULL,
     id_comment INT NOT NULL,
 
