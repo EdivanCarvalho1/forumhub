@@ -22,12 +22,6 @@ public class Reply extends Interaction implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 	
-	@Id
-	@GeneratedValue(strategy= GenerationType.IDENTITY)
-	@Column(name = "id_reply", nullable = false)
-	@NotNull
-	private Long id;
-	
 	@ManyToOne
 	@JoinColumn(name = "id_comment", nullable = false)
 	@NotNull

@@ -56,9 +56,9 @@ public class PunishmentController {
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 	}
 	
-	@DeleteMapping("/punishment")
+	@DeleteMapping("/punishment/{id}")
 	@Operation(summary= "Deleta um tipo de punição pelo ID")
-	public ResponseEntity<Void> deletePunishment(@RequestBody Long id){
+	public ResponseEntity<Void> deletePunishment(@PathParam(value="id") Long id){
 		
 		if(id != null) {
 			punishmentService.deletePunishment(id);
@@ -67,12 +67,12 @@ public class PunishmentController {
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 	}
 	
-	@PutMapping("/punishment")
+	@PutMapping("/punishment/{id}")
 	@Operation(summary= "Atualiza um tipo de punição pelo ID")
-	public ResponseEntity<Void> updatePunishment(@RequestBody Long id){
+	public ResponseEntity<Void> updatePunishment(@PathParam(value = "id") Long id, @RequestBody Punishment punishment){
 		
 		if(id != null) {
-			punishmentService.updatePunishment(id);
+			punishmentService.updatePunishment(id, punishment);
 			return ResponseEntity.status(HttpStatus.ACCEPTED).build();
 		}
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();

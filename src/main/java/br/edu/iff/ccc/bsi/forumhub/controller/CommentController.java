@@ -56,9 +56,9 @@ public class CommentController {
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 	}
 	
-	@DeleteMapping("/comment")
+	@DeleteMapping("/comment/{id}")
 	@Operation(summary= "Deleta um comentário pelo ID")
-	public ResponseEntity<Void> deleteComment(@RequestBody Long id){
+	public ResponseEntity<Void> deleteComment(@PathParam(value = "id") Long id){
 		
 		if(id != null) {
 			commentService.deleteComment(id);
@@ -67,12 +67,12 @@ public class CommentController {
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 	}
 	
-	@PutMapping("/comment")
+	@PutMapping("/comment/{id}")
 	@Operation(summary= "Atualiza um comentário pelo ID")
-	public ResponseEntity<Void> updateComment(@RequestBody Long id){
+	public ResponseEntity<Void> updateComment(@PathParam(value = "id") Long id, @RequestBody Comment comment){
 		
 		if(id != null) {
-			commentService.updateComment(id);
+			commentService.updateComment(id, comment);
 			return ResponseEntity.status(HttpStatus.ACCEPTED).build();
 		}
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();

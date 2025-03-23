@@ -11,50 +11,56 @@ import br.edu.iff.ccc.bsi.forumhub.repository.CommentRepository;
 
 @Service
 public class CommentService {
-	
+
 	@Autowired
 	CommentRepository commentRepository;
-	
-	public Optional<List<Comment>> findAll(){
-		
+
+	public Optional<List<Comment>> findAll() {
+
 		return Optional.ofNullable(commentRepository.findAll());
-		
+
 	}
-	
-	public Optional<Comment> findOne(Long id){
-		
-		Comment comment = commentRepository.findById(id).orElseThrow(() -> new RuntimeException("O comentário não existe"));
-		
+
+	public Optional<Comment> findOne(Long id) {
+
+		Comment comment = commentRepository.findById(id)
+				.orElseThrow(() -> new RuntimeException("O comentário não existe"));
+
 		return Optional.ofNullable(comment);
-		
+
 	}
-	
+
 	public void postComment(Comment comment) {
-		
+
 		commentRepository.save(comment);
-		
+
 	}
-	
+
 	public void deleteComment(Long id) {
 		commentRepository.deleteById(id);
 	}
-	
-	public void updateComment(Long id) {
+
+	public void updateComment(Long id, Comment updatedComment) {
+
+		Comment existingComment = commentRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Comentário não encontrado"));
 		
-		Comment updatedComment = findAll()
-				.orElseThrow(() -> new RuntimeException("Usuários não existentes"))
-				.stream()
-				.filter(comment -> comment.getId().equals(id))
-				.findFirst()
-				.orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+		existingComment.setContent(updatedComment.getContent());
+		existingComment.setCreationDate(updatedComment.getCreationDate());
+		existingComment.setDislikes(updatedComment.getDislikes());
+		existingComment.setEditDate(updatedComment.getEditDate());
+		existingComment.setLikes(updatedComment.getLikes());
+		existingComment.setPerson(updatedComment.getPerson());
+		existingComment.setPost(updatedComment.getPost());
 		
-		commentRepository.save(updatedComment);
+		commentRepository.save(existingComment);
 	}
-	
-	public Optional<Comment> findByContent(String content){
-		
-		Comment comment = commentRepository.findByContent(content).orElseThrow(() -> new RuntimeException("Comentário não encontrado!"));
-		
+
+	public Optional<Comment> findByContent(String content) {
+
+		Comment comment = commentRepository.findByContent(content)
+				.orElseThrow(() -> new RuntimeException("Comentário não encontrado!"));
+
 		return Optional.ofNullable(comment);
 	}
 }

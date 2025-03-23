@@ -25,65 +25,116 @@ import br.edu.iff.ccc.bsi.forumhub.repository.PersonRepository;
 
 @ExtendWith(MockitoExtension.class)
 public class PersonServiceTest {
-	
+
 	@InjectMocks
-	PersonService personService;
-	
+	private PersonService personService;
+
 	@Mock
 	private PersonRepository personRepository;
-	
+
 	@BeforeEach
 	public void setup() {
 		MockitoAnnotations.openMocks(this);
 	}
-	
-	 
-    @Test
-    @DisplayName("Busca por Id em Person com sucesso.")
-    void testFindById() {
-         Person mockedPerson = new Person(1L, "Edivan", "123456789", "123", LocalDateTime.now(), STATUS.ACTIVE, 1);
-         when(personRepository.findById(1L)).thenReturn(Optional.of(mockedPerson));
-        
-        Person result = personService.findOne(1L).orElseThrow(() -> new RuntimeException("Usuário não encontrado!"));
 
-        assertNotNull(result);
-        assertEquals(mockedPerson.getNickname(), result.getNickname());
-        verify(personRepository).findById(1L);
-        
-    }
-    
-    @Test
-    @DisplayName("Busca por Id em Person com sucesso.")
-    void testFindByNickName() {
-         Person mockedPerson = new Person(1L, "Edivan", "123456789", "123", LocalDateTime.now(), STATUS.ACTIVE, 1);
-         when(personRepository.findByNickname("Edivan")).thenReturn(Optional.of(mockedPerson));
-        
-        Person result = personService.findByNickname("Edivan").orElseThrow(() -> new RuntimeException("Usuário não encontrado!"));
+	@Test
+	@DisplayName("Busca todas as pessoas com sucesso.")
+	public void testFindAll() {
+		List<Person> mockedPerson = List.of(new Person(1L, "Edivan", "123456789", "123", "edivan@email.com",
+				LocalDateTime.now(), STATUS.ACTIVE, 1));
+		when(personRepository.findAll()).thenReturn(mockedPerson);
 
-        assertNotNull(result);
-        assertEquals(mockedPerson.getNickname(), result.getNickname());
-        verify(personRepository).findById(1L);
-        
-    }
-    
-    @Test
-    @DisplayName("Busca por Nickname e Phone em Person com sucesso.")
-    void testFindByNicknameAndPhone() {
+		List<Person> result = personService.findAll()
+				.orElseThrow(() -> new RuntimeException("Nenhuma pessoa encontrada!"));
 
-        List<Person> mockedPerson = List.of(new Person(1L, "Edivan", "123456789", "123", 
-                LocalDateTime.now(), STATUS.ACTIVE, 1));
+		assertNotNull(result);
+		assertEquals(mockedPerson.size(), result.size());
+		verify(personRepository).findAll();
+	}
 
- 
-        when(personRepository.findByNicknameAndPhone("Edivan", "123")).thenReturn(Optional.of(mockedPerson));
+	@Test
+	@DisplayName("Busca por Id em Person com sucesso.")
+	public void testFindOne() {
+		Person mockedPerson = new Person(1L, "Edivan", "123456789", "123", "edivan@email.com", LocalDateTime.now(),
+				STATUS.ACTIVE, 1);
+		when(personRepository.findById(1L)).thenReturn(Optional.of(mockedPerson));
 
+		Person result = personService.findOne(1L).orElseThrow(() -> new RuntimeException("Usuário não encontrado!"));
 
-        List<Person> result = personService.findByNicknameAndPhone("Edivan", "123").orElseThrow(() -> new RuntimeException("Usuário não encontrado!"));
-        
-        assertNotNull(result);
-        assertFalse(result.isEmpty());
-        assertEquals(mockedPerson.get(0).getNickname(), result.get(0).getNickname());
+		assertNotNull(result);
+		assertEquals(mockedPerson.getNickname(), result.getNickname());
+		verify(personRepository).findById(1L);
 
-        verify(personRepository).findByNicknameAndPhone("Edivan", "123");
-    }
+	}
+
+	@Test
+	@DisplayName("Busca por Id em Person com sucesso.")
+	public void testFindByNickName() {
+		Person mockedPerson = new Person(1L, "Edivan", "123456789", "123", "edivan@email.com", LocalDateTime.now(),
+				STATUS.ACTIVE, 1);
+		when(personRepository.findByNickname("Edivan")).thenReturn(Optional.of(mockedPerson));
+
+		Person result = personService.findByNickname("Edivan")
+				.orElseThrow(() -> new RuntimeException("Usuário não encontrado!"));
+
+		assertNotNull(result);
+		assertEquals(mockedPerson.getNickname(), result.getNickname());
+		verify(personRepository).findByNickname("Edivan");
+
+	}
+
+	@Test
+	@DisplayName("Busca por Nickname e Phone em Person com sucesso.")
+	public void testFindByNicknameAndPhone() {
+
+		List<Person> mockedPerson = List.of(new Person(1L, "Edivan", "123456789", "123", "edivan@email.com",
+				LocalDateTime.now(), STATUS.ACTIVE, 1));
+
+		when(personRepository.findByNicknameAndPhone("Edivan", "123")).thenReturn(Optional.of(mockedPerson));
+
+		List<Person> result = personService.findByNicknameAndPhone("Edivan", "123")
+				.orElseThrow(() -> new RuntimeException("Usuário não encontrado!"));
+
+		assertNotNull(result);
+		assertFalse(result.isEmpty());
+		assertEquals(mockedPerson.get(0).getNickname(), result.get(0).getNickname());
+
+		verify(personRepository).findByNicknameAndPhone("Edivan", "123");
+	}
+
+	@Test
+	@DisplayName("Cria pessoa com sucesso.")
+	public void testPostPerson() {
+		Person mockedPerson = new Person(1L, "Edivan", "123456789", "123", "edivan@email.com", LocalDateTime.now(),
+				STATUS.ACTIVE, 1);
+		personService.postPerson(mockedPerson);
+
+		verify(personRepository).save(mockedPerson);
+	}
+
+	@Test
+	@DisplayName("Deleta pessoa com sucesso.")
+	public void testDeletePerson() {
+		personService.deletePerson(1L);
+
+		verify(personRepository).deleteById(1L);
+	}
+
+	@Test
+	@DisplayName("Atualiza uma pessoa com sucesso.")
+	public void testUpdatePerson() {
+		Person existingPerson = new Person(1L, "Edivan", "123456789", "123", "edivan@email.com", LocalDateTime.now(),
+				STATUS.ACTIVE, 1);
+		Person updatedPerson = new Person(1L, "Edivan", "123456789", "123", "123@email.com", LocalDateTime.now(),
+				STATUS.ACTIVE, 1);
+
+		when(personRepository.findById(1L)).thenReturn(Optional.of(existingPerson));
+		when(personRepository.save(existingPerson)).thenReturn(existingPerson);
+
+		personService.updatePerson(1L, updatedPerson);
+
+		verify(personRepository).findById(1L);
+		verify(personRepository).save(updatedPerson);
+	}
 
 }

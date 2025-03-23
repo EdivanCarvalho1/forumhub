@@ -11,43 +11,46 @@ import br.edu.iff.ccc.bsi.forumhub.repository.PostRepository;
 
 @Service
 public class PostService {
-	
+
 	@Autowired
 	PostRepository postRepository;
-	
-	public Optional<List<Post>> findAll(){
-		
+
+	public Optional<List<Post>> findAll() {
+
 		return Optional.ofNullable(postRepository.findAll());
-		
+
 	}
-	
-	public Optional<Post> findOne(Long id){
-		
+
+	public Optional<Post> findOne(Long id) {
+
 		Post post = postRepository.findById(id).orElseThrow(() -> new RuntimeException("O comentário não existe"));
-		
+
 		return Optional.ofNullable(post);
-		
+
 	}
-	
+
 	public void postPost(Post post) {
-		
+
 		postRepository.save(post);
-		
+
 	}
-	
+
 	public void deletePost(Long id) {
 		postRepository.deleteById(id);
 	}
-	
-	public void updatePost(Long id) {
+
+	public void updatePost(Long id, Post updatedPost) {
+		Post existingPost = postRepository.findById(id)
+				.orElseThrow(() -> new RuntimeException("O comentário não existe"));
+
+		existingPost.setContent(updatedPost.getContent());
+		existingPost.setCreationDate(updatedPost.getCreationDate());
+		existingPost.setDislikes(updatedPost.getDislikes());
+		existingPost.setLikes(updatedPost.getLikes());
+		existingPost.setPerson(updatedPost.getPerson());
+		existingPost.setPerson(updatedPost.getPerson());
+		existingPost.setTopic(updatedPost.getTopic());
 		
-		Post updatedPost = findAll()
-				.orElseThrow(() -> new RuntimeException("Usuários não existentes"))
-				.stream()
-				.filter(post -> post.getId().equals(id))
-				.findFirst()
-				.orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
-		
-		postRepository.save(updatedPost);
+		postRepository.save(existingPost);
 	}
 }

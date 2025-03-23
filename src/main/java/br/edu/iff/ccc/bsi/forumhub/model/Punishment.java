@@ -8,6 +8,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.validation.constraints.Future;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -36,9 +38,11 @@ public class Punishment implements Serializable {
 	
 	@Column(nullable = false)
 	@NotNull
+	@NotEmpty
 	private String description;
 	
 	@Column(name = "punishment_period", nullable = false)
 	@NotNull
+	@Future
 	private Duration periodo;
 }

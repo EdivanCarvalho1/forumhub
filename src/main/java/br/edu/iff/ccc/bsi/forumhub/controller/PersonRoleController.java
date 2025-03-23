@@ -13,68 +13,66 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.edu.iff.ccc.bsi.forumhub.model.Person;
-import br.edu.iff.ccc.bsi.forumhub.service.PersonService;
+import br.edu.iff.ccc.bsi.forumhub.model.PersonRole;
+import br.edu.iff.ccc.bsi.forumhub.service.PersonRoleService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.websocket.server.PathParam;
 
 @RestController
-@RequestMapping("/api/v1")
-@Tag(name = "Person", description= "Operações relacionadas a pessoas")
-public class PersonController {
+@RequestMapping("api/v1")
+public class PersonRoleController {
 	
 	@Autowired
-	PersonService personService;
+	PersonRoleService personRoleService;
 	
-	@GetMapping("/person")
+	@GetMapping("/personrole")
 	@Operation(summary= "Retorna todas as pessoas/users")
-	public ResponseEntity<List<Person>> getPersons(){
+	public ResponseEntity<List<PersonRole>> getPersonRoles(){
 		
-		List<Person> personList = personService.findAll().orElseThrow(() -> new RuntimeException("Nenhum usuário cadastrado"));
+		List<PersonRole> personroleList = personRoleService.findAll().orElseThrow(() -> new RuntimeException("Nenhum usuário cadastrado"));
 		
-		return ResponseEntity.ok().body(personList);
+		return ResponseEntity.ok().body(personroleList);
 		
 	}
 	
-	@GetMapping("/person/{id}")
+	@GetMapping("/personrole/{id}")
 	@Operation(summary= "Retorna uma pessoa pelo ID")
-	public ResponseEntity<Person> getPerson(@PathParam(value="id") Long id){
+	public ResponseEntity<PersonRole> getPersonRole(@PathParam(value="id") Long id){
 		
-		Person person = personService.findOne(id).orElseThrow(() -> new RuntimeException("Usuário não encontrado!"));
+		PersonRole personrole = personRoleService.findOne(id).orElseThrow(() -> new RuntimeException("Usuário não encontrado!"));
 		
-		return ResponseEntity.ok().body(person);
+		return ResponseEntity.ok().body(personrole);
 	}
 	
 	
-	@PostMapping("/person")
+	@PostMapping("/personrole")
 	@Operation(summary= "Cria um usuário")
-	public ResponseEntity<Void> postPerson(@RequestBody Person person){
+	public ResponseEntity<Void> postPersonRole(@RequestBody PersonRole personRole){
 		
-		if(person != null) {
-			personService.postPerson(person);
+		if(personRole != null) {
+			personRoleService.postPersonRole(personRole);
 			return ResponseEntity.status(HttpStatus.CREATED).build();
 		}
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 	}
 	
-	@DeleteMapping("/person/{id}")
+	@DeleteMapping("/personrole/{id}")
 	@Operation(summary= "Deleta uma pessoa pelo ID")
-	public ResponseEntity<Void> deletePerson(@PathParam(value = "id") Long id){
+	public ResponseEntity<Void> deletePersonRole(@PathParam(value = "id") Long id){
 		
 		if(id != null) {
-			personService.deletePerson(id);
+			personRoleService.deletePersonRole(id);
 			return ResponseEntity.status(HttpStatus.ACCEPTED).build();
 		}
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 	}
 	
-	@PutMapping("/person/{id}")
+	@PutMapping("/personrole/{id}")
 	@Operation(summary= "Atualiza uma pessoa pelo ID")
-	public ResponseEntity<Void> updatePerson(@PathParam(value = "id") Long id, @RequestBody Person person){
+	public ResponseEntity<Void> updatePersonRole(@PathParam(value = "id") Long id, @RequestBody PersonRole personRole){
 		
 		if(id != null) {
-			personService.updatePerson(id, person);
+			personRoleService.updatePersonRole(id, personRole);
 			return ResponseEntity.status(HttpStatus.ACCEPTED).build();
 		}
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();

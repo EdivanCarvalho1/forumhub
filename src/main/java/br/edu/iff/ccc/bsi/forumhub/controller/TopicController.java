@@ -56,9 +56,9 @@ public class TopicController {
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 	}
 	
-	@DeleteMapping("/topic")
+	@DeleteMapping("/topic/{id}")
 	@Operation(summary= "Deleta uma tópico pelo ID")
-	public ResponseEntity<Void> deleteTopic(@RequestBody Long id){
+	public ResponseEntity<Void> deleteTopic(@PathParam(value = "id") Long id){
 		
 		if(id != null) {
 			topicService.deleteTopic(id);
@@ -67,12 +67,12 @@ public class TopicController {
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 	}
 	
-	@PutMapping("/topic")
+	@PutMapping("/topic/{id}")
 	@Operation(summary= "Atualiza um tópico pelo ID")
-	public ResponseEntity<Void> updateTopic(@RequestBody Long id){
+	public ResponseEntity<Void> updateTopic(@PathParam(value = "id") Long id, @RequestBody Topic topic){
 		
 		if(id != null) {
-			topicService.updateTopic(id);
+			topicService.updateTopic(id, topic);
 			return ResponseEntity.status(HttpStatus.ACCEPTED).build();
 		}
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
