@@ -56,9 +56,9 @@ public class CategoryController {
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 	}
 	
-	@DeleteMapping("/category")
+	@DeleteMapping("/category/{id}")
 	@Operation(summary= "Deleta uma categoria pelo ID")
-	public ResponseEntity<Void> deleteCategory(@RequestBody Long id){
+	public ResponseEntity<Void> deleteCategory(@PathParam(value = "id") Long id){
 		
 		if(id != null) {
 			categoryService.deleteCategory(id);
@@ -67,12 +67,12 @@ public class CategoryController {
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 	}
 	
-	@PutMapping("/category")
+	@PutMapping("/category/{id}")
 	@Operation(summary= "Atualiza uma categoria pelo ID")
-	public ResponseEntity<Void> updateCategory(@RequestBody Long id){
+	public ResponseEntity<Void> updateCategory(@PathParam(value = "id") Long id, @RequestBody Category category){
 		
 		if(id != null) {
-			categoryService.updateCategory(id);
+			categoryService.updateCategory(id, category);
 			return ResponseEntity.status(HttpStatus.ACCEPTED).build();
 		}
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();

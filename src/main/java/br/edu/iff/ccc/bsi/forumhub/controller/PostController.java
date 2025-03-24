@@ -56,9 +56,9 @@ public class PostController {
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 	}
 	
-	@DeleteMapping("/post")
+	@DeleteMapping("/post/{id}")
 	@Operation(summary= "Deleta um post pelo ID")
-	public ResponseEntity<Void> deletePost(@RequestBody Long id){
+	public ResponseEntity<Void> deletePost(@PathParam(value = "id") Long id){
 		
 		if(id != null) {
 			postService.deletePost(id);
@@ -67,12 +67,12 @@ public class PostController {
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 	}
 	
-	@PutMapping("/post")
+	@PutMapping("/post/{id}")
 	@Operation(summary= "Atualiza um post pelo ID")
-	public ResponseEntity<Void> updatePost(@RequestBody Long id){
+	public ResponseEntity<Void> updatePost(@PathParam(value = "id") Long id, @RequestBody Post post){
 		
 		if(id != null) {
-			postService.updatePost(id);
+			postService.updatePost(id, post);
 			return ResponseEntity.status(HttpStatus.ACCEPTED).build();
 		}
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();

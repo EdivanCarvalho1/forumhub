@@ -11,56 +11,63 @@ import br.edu.iff.ccc.bsi.forumhub.repository.PersonRepository;
 
 @Service
 public class PersonService {
-	
+
 	@Autowired
 	PersonRepository personRepository;
-	
-	public Optional<List<Person>> findAll(){
-		
+
+	public Optional<List<Person>> findAll() {
+
 		return Optional.ofNullable(personRepository.findAll());
-		
+
 	}
-	
-	public Optional<Person> findOne(Long id){
-		
-		Person person = personRepository.findById(id).orElseThrow(() -> new RuntimeException("Usuários não existentes"));
-		
+
+	public Optional<Person> findOne(Long id) {
+
+		Person person = personRepository.findById(id)
+				.orElseThrow(() -> new RuntimeException("Usuários não existentes"));
+
 		return Optional.ofNullable(person);
-		
+
 	}
-	
-	public void postUser(Person person) {
-		
+
+	public void postPerson(Person person) {
+
 		personRepository.save(person);
-		
+
 	}
-	
-	public void deleteUser(Long id) {
-		
+
+	public void deletePerson(Long id) {
+
 		personRepository.deleteById(id);
 	}
-	
-	public void updateUser(Long id) {
+
+	public void updatePerson(Long id, Person updatedPerson) {
 		
-		Person updatedPerson = findAll()
-				.orElseThrow(() -> new RuntimeException("Usuários não existentes"))
-				.stream()
-				.filter(person -> person.getId().equals(id))
-				.findFirst()
-				.orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
-		
-		personRepository.save(updatedPerson);
+        Person existingPerson = personRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Pessoa não encontrada!"));
+        
+        existingPerson.setNickname(updatedPerson.getNickname());
+        existingPerson.setPassword(updatedPerson.getPassword());
+        existingPerson.setPhone(updatedPerson.getPhone());
+        existingPerson.setPoints(updatedPerson.getPoints());
+        existingPerson.setEmail(updatedPerson.getEmail());
+        existingPerson.setSignInDate(updatedPerson.getSignInDate());
+        existingPerson.setStatus(updatedPerson.getStatus());
+        
+        personRepository.save(existingPerson);
 	}
-	
+
 	public Optional<Person> findByNickname(String nickname) {
-		Person person = personRepository.findByNickname(nickname).orElseThrow(() -> new RuntimeException("Pessoa não encontrada!"));
-		
+		Person person = personRepository.findByNickname(nickname)
+				.orElseThrow(() -> new RuntimeException("Pessoa não encontrada!"));
+
 		return Optional.ofNullable(person);
 	}
-	
+
 	public Optional<List<Person>> findByNicknameAndPhone(String nickname, String phone) {
-		List<Person> personList = personRepository.findByNicknameAndPhone(nickname, phone).orElseThrow(() -> new RuntimeException("Pessoa não encontrada!"));
-		
+		List<Person> personList = personRepository.findByNicknameAndPhone(nickname, phone)
+				.orElseThrow(() -> new RuntimeException("Pessoa não encontrada!"));
+
 		return Optional.ofNullable(personList);
 	}
 }

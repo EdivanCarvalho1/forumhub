@@ -56,9 +56,9 @@ public class ReplyController {
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 	}
 	
-	@DeleteMapping("/reply")
+	@DeleteMapping("/reply/{id}")
 	@Operation(summary= "Deleta uma resposta de comentário")
-	public ResponseEntity<Void> deleteReply(@RequestBody Long id){
+	public ResponseEntity<Void> deleteReply(@PathParam(value = "id") Long id){
 		
 		if(id != null) {
 			replyService.deleteReply(id);
@@ -67,12 +67,12 @@ public class ReplyController {
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 	}
 	
-	@PutMapping("/reply")
+	@PutMapping("/reply/{id}")
 	@Operation(summary= "Atualiza uma resposta de comentário")
-	public ResponseEntity<Void> updateReply(@RequestBody Long id){
+	public ResponseEntity<Void> updateReply(@PathParam(value = "id") Long id, @RequestBody Reply updatedReply){
 		
 		if(id != null) {
-			replyService.updateReply(id);
+			replyService.updateReply(id, updatedReply);
 			return ResponseEntity.status(HttpStatus.ACCEPTED).build();
 		}
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();

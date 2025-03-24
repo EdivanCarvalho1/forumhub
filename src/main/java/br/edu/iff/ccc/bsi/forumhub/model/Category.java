@@ -8,7 +8,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PastOrPresent;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -33,12 +35,15 @@ public class Category implements Serializable {
 	
 	@Column(nullable = false)
 	@NotNull
+	@NotEmpty
 	private String name;
 	
 	@Column(name = "creation_date", nullable = false)
 	@NotNull
+	@PastOrPresent
 	private LocalDateTime creationDate;
 	
 	@NotNull
+	@NotEmpty
 	private String description;
 }

@@ -10,7 +10,10 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PastOrPresent;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -36,18 +39,22 @@ public class Post implements Serializable{
 	
 	@Column(nullable = false)
 	@NotNull
+	@PositiveOrZero
 	private Integer likes;
 	
 	@Column(nullable = false)
 	@NotNull
+	@PositiveOrZero
 	private Integer dislikes;
 	
 	@Column(name = "post_content", nullable = false)
 	@NotNull
+	@NotEmpty
 	private String content;
 	
 	@Column(name = "creation_date", nullable = false)
 	@NotNull
+	@PastOrPresent
 	private LocalDateTime creationDate;
 	
 	@ManyToOne
