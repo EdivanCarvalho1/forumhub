@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.edu.iff.ccc.bsi.forumhub.exception.CategoryNotFoundException;
+import br.edu.iff.ccc.bsi.forumhub.exception.EmptyListException;
 import br.edu.iff.ccc.bsi.forumhub.model.Category;
 import br.edu.iff.ccc.bsi.forumhub.service.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -31,7 +33,11 @@ public class CategoryController {
 	@Operation(summary= "Retorna todas as categorias")
 	public ResponseEntity<List<Category>> getCategorys(){
 		
-		List<Category> categoryList = categoryService.findAll().orElseThrow(() -> new RuntimeException("Nenhum usuário cadastrado"));
+		List<Category> categoryList = categoryService.findAll().orElseThrow(() -> new CategoryNotFoundException());
+		
+		if (categoryList.isEmpty()) {
+			throw new EmptyListException();
+		}
 		
 		return ResponseEntity.ok().body(categoryList);
 		
@@ -41,9 +47,10 @@ public class CategoryController {
 	@Operation(summary= "Retorna uma categoria pelo ID")
 	public ResponseEntity<Category> getCategory(@PathParam(value="id") Long id){
 		
-		Category category = categoryService.findOne(id).orElseThrow(() -> new RuntimeException("Usuário não encontrado!"));
+		Category category = categoryService.findOne(id).orElseThrow(() -> new CategoryNotFoundException(id));
 		
 		return ResponseEntity.ok().body(category);
+		
 	}
 	@PostMapping("/category")
 	@Operation(summary= "Cria uma categoria")

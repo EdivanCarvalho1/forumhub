@@ -53,6 +53,7 @@ public class CategoryServiceTest {
 	@DisplayName("Busca por Id em Category com sucesso.")
 	public void testFindOne() {
 		Category mockedCategory = new Category(1L, "Category", LocalDateTime.now(), "1234");
+		
 		when(categoryRepository.findById(1L)).thenReturn(Optional.of(mockedCategory));
 
 		Category result = categoryService.findOne(1L)

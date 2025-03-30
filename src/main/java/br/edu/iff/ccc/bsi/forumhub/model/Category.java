@@ -8,6 +8,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
@@ -23,6 +24,7 @@ import lombok.Setter;
 @EqualsAndHashCode
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "category")
 public class Category implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
@@ -30,7 +32,6 @@ public class Category implements Serializable {
 	@Id
 	@GeneratedValue(strategy= GenerationType.IDENTITY)
 	@Column(name = "id_category", nullable = false)
-	@NotNull
 	private Long id;
 	
 	@Column(nullable = false)
@@ -39,11 +40,11 @@ public class Category implements Serializable {
 	private String name;
 	
 	@Column(name = "creation_date", nullable = false)
-	@NotNull
-	@PastOrPresent
+	@NotNull(message = "Creation date cannot be null")
+	@PastOrPresent(message = "Creation date must be in the past or in the present")
 	private LocalDateTime creationDate;
 	
-	@NotNull
-	@NotEmpty
+	@NotNull(message = "Description cannot be null")
+	@NotEmpty(message = "Description cannot be null or empty")
 	private String description;
 }

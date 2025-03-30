@@ -107,6 +107,7 @@ public class PersonServiceTest {
 	public void testPostPerson() {
 		Person mockedPerson = new Person(1L, "Edivan", "123456789", "123", "edivan@email.com", LocalDateTime.now(),
 				STATUS.ACTIVE, 1);
+		
 		personService.postPerson(mockedPerson);
 
 		verify(personRepository).save(mockedPerson);
@@ -115,6 +116,7 @@ public class PersonServiceTest {
 	@Test
 	@DisplayName("Deleta pessoa com sucesso.")
 	public void testDeletePerson() {
+		
 		personService.deletePerson(1L);
 
 		verify(personRepository).deleteById(1L);

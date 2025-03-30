@@ -10,7 +10,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.validation.constraints.FutureOrPresent;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
 import lombok.AllArgsConstructor;
@@ -25,6 +26,7 @@ import lombok.Setter;
 @EqualsAndHashCode
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "punishment_log")
 public class PunishmentLog implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -52,6 +54,6 @@ public class PunishmentLog implements Serializable {
 	
 	@Column(name = "end_date", nullable = false)
 	@NotNull
-	@FutureOrPresent
+	@Future
 	private LocalDateTime endDate;
 }

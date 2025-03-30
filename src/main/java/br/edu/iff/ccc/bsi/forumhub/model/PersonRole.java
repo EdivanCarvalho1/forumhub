@@ -31,7 +31,6 @@ public class PersonRole implements Serializable {
 	@Id
 	@GeneratedValue(strategy= GenerationType.IDENTITY)
 	@Column(name = "id_person_roles", nullable = false)
-	@NotNull
 	private Long id;
 	
 	@ManyToOne
