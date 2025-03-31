@@ -3,6 +3,7 @@ package br.edu.iff.ccc.bsi.forumhub.model;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -19,6 +20,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Table(name = "post_comments")
+@Schema(description = "Comment entity")
 public class Comment extends Interaction implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
@@ -26,11 +28,13 @@ public class Comment extends Interaction implements Serializable {
 	@Id
 	@GeneratedValue(strategy= GenerationType.IDENTITY)
 	@Column(name = "id_comment", nullable = false)
+	@Schema(description = "Comment ID", example = "1")
 	private Long id;
 	
 	@ManyToOne
 	@JoinColumn(name = "id_post", nullable = false)
 	@NotNull
+	@Schema(description = "Post ID", example = "1")
 	private Post post;
 	
 	public Comment(Long id, Post post, Integer likes, Integer dislikes, String content, LocalDateTime creationDate, LocalDateTime editDate,

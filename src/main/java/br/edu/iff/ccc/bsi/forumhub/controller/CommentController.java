@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.edu.iff.ccc.bsi.forumhub.exception.CommentNotFoundException;
+import br.edu.iff.ccc.bsi.forumhub.exception.EmptyListException;
+import br.edu.iff.ccc.bsi.forumhub.exception.InvalidCommentException;
 import br.edu.iff.ccc.bsi.forumhub.model.Comment;
 import br.edu.iff.ccc.bsi.forumhub.service.CommentService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -21,7 +24,7 @@ import jakarta.websocket.server.PathParam;
 
 @RestController
 @RequestMapping("/api/v1")
-@Tag(name = "Person", description= "Operações relacionadas a comentários")
+@Tag(name = "Comment", description= "Operações relacionadas a comentários")
 public class CommentController {
 	
 	@Autowired
@@ -31,7 +34,11 @@ public class CommentController {
 	@Operation(summary= "Retorna todos os comentários")
 	public ResponseEntity<List<Comment>> getComments(){
 		
-		List<Comment> commentList = commentService.findAll().orElseThrow(() -> new RuntimeException("Nenhum usuário cadastrado"));
+		List<Comment> commentList = commentService.findAll().orElseThrow(() -> new CommentNotFoundException());
+		
+		if (commentList.isEmpty()) {
+            throw new EmptyListException();
+          }
 		
 		return ResponseEntity.ok().body(commentList);
 		
@@ -41,7 +48,7 @@ public class CommentController {
 	@Operation(summary= "Retorna um comentário pelo id")
 	public ResponseEntity<Comment> getComment(@PathParam(value="id") Long id){
 		
-		Comment comment = commentService.findOne(id).orElseThrow(() -> new RuntimeException("Usuário não encontrado!"));
+		Comment comment = commentService.findOne(id).orElseThrow(() -> new CommentNotFoundException(id));
 		
 		return ResponseEntity.ok().body(comment);
 	}
@@ -53,7 +60,7 @@ public class CommentController {
 			commentService.postComment(comment);
 			return ResponseEntity.status(HttpStatus.CREATED).build();
 		}
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+		throw new InvalidCommentException();
 	}
 	
 	@DeleteMapping("/comment/{id}")
@@ -64,7 +71,7 @@ public class CommentController {
 			commentService.deleteComment(id);
 			return ResponseEntity.status(HttpStatus.ACCEPTED).build();
 		}
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+		throw new InvalidCommentException();
 	}
 	
 	@PutMapping("/comment/{id}")
@@ -75,6 +82,6 @@ public class CommentController {
 			commentService.updateComment(id, comment);
 			return ResponseEntity.status(HttpStatus.ACCEPTED).build();
 		}
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+		throw new InvalidCommentException();
 	}
 }

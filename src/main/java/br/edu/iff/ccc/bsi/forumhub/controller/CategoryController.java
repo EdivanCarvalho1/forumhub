@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.edu.iff.ccc.bsi.forumhub.exception.CategoryNotFoundException;
 import br.edu.iff.ccc.bsi.forumhub.exception.EmptyListException;
+import br.edu.iff.ccc.bsi.forumhub.exception.InvalidCategoryException;
 import br.edu.iff.ccc.bsi.forumhub.model.Category;
 import br.edu.iff.ccc.bsi.forumhub.service.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -23,7 +24,7 @@ import jakarta.websocket.server.PathParam;
 
 @RestController
 @RequestMapping("/api/v1")
-@Tag(name = "Person", description= "Operações relacionadas a categorias")
+@Tag(name = "Category", description= "Operações relacionadas a categorias")
 public class CategoryController {
 	
 	@Autowired
@@ -60,7 +61,7 @@ public class CategoryController {
 			categoryService.postCategory(category);
 			return ResponseEntity.status(HttpStatus.CREATED).build();
 		}
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+		throw new InvalidCategoryException();
 	}
 	
 	@DeleteMapping("/category/{id}")
@@ -71,7 +72,7 @@ public class CategoryController {
 			categoryService.deleteCategory(id);
 			return ResponseEntity.status(HttpStatus.ACCEPTED).build();
 		}
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+		throw new InvalidCategoryException();
 	}
 	
 	@PutMapping("/category/{id}")
@@ -82,6 +83,6 @@ public class CategoryController {
 			categoryService.updateCategory(id, category);
 			return ResponseEntity.status(HttpStatus.ACCEPTED).build();
 		}
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+		throw new InvalidCategoryException();
 	}
 }

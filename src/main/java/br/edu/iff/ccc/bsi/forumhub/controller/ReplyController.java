@@ -21,7 +21,7 @@ import jakarta.websocket.server.PathParam;
 
 @RestController
 @RequestMapping("/api/v1")
-@Tag(name = "Person", description= "Operações relacionadas a respostas de comentários")
+@Tag(name = "Reply", description= "Operações relacionadas a respostas de comentários")
 public class ReplyController {
 	
 	@Autowired

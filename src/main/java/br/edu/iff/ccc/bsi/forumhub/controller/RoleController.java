@@ -16,10 +16,12 @@ import org.springframework.web.bind.annotation.RestController;
 import br.edu.iff.ccc.bsi.forumhub.model.Role;
 import br.edu.iff.ccc.bsi.forumhub.service.RoleService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.websocket.server.PathParam;
 
 @RestController
 @RequestMapping("api/v1")
+@Tag(name = "Role", description = "Operações relacionadas a roles")
 public class RoleController {
 
 	@Autowired

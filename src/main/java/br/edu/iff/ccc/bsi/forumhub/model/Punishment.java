@@ -3,6 +3,7 @@ package br.edu.iff.ccc.bsi.forumhub.model;
 import java.io.Serializable;
 import java.time.Duration;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -25,6 +26,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "punishment")
+@Schema(description = "Punishment entity")
 public class Punishment implements Serializable {
 
 	/**
@@ -35,15 +37,18 @@ public class Punishment implements Serializable {
 	@Id
 	@GeneratedValue(strategy= GenerationType.IDENTITY)
 	@Column(name = "id_punishment", nullable = false)
+	@Schema(description = "Punishment ID", example = "1")
 	private Long id;
 	
 	@Column(nullable = false)
 	@NotNull
 	@NotEmpty
+	@Schema(description = "Punishment name", example = "Ban")
 	private String description;
 	
 	@Column(name = "punishment_period", nullable = false)
 	@NotNull
 	@Future
+	@Schema(description = "Punishment period", example = "PT1H")
 	private Duration periodo;
 }

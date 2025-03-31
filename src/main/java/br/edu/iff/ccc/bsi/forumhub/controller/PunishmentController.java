@@ -21,7 +21,7 @@ import jakarta.websocket.server.PathParam;
 
 @RestController
 @RequestMapping("/api/v1")
-@Tag(name = "Person", description= "Operações relacionadas a punições")
+@Tag(name = "Punishment", description= "Operações relacionadas a punições")
 public class PunishmentController {
 	
 	@Autowired

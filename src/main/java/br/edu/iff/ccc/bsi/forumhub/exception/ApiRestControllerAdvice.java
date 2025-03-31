@@ -23,6 +23,13 @@ public class ApiRestControllerAdvice extends ResponseEntityExceptionHandler {
 		body.setTitle("Category not found error");
 		return body;
 	}
+	@ExceptionHandler(InvalidCategoryException.class)
+	ProblemDetail handleInvalidCategoryException(InvalidCategoryException e) {
+
+		ProblemDetail body = ProblemDetail.forStatusAndDetail(HttpStatusCode.valueOf(500), e.getMessage());
+		body.setTitle("Invalid category error");
+		return body;
+	}
 	@ExceptionHandler(EmptyListException.class)
 	ProblemDetail handleEmptyListException(EmptyListException e) {
 
@@ -30,5 +37,19 @@ public class ApiRestControllerAdvice extends ResponseEntityExceptionHandler {
 		body.setTitle("Empty list error");
 		return body;
 		
+	}
+	@ExceptionHandler(CommentNotFoundException.class)
+	ProblemDetail handleCommentNotFoundException(CommentNotFoundException e) {
+
+		ProblemDetail body = ProblemDetail.forStatusAndDetail(HttpStatusCode.valueOf(500), e.getMessage());
+		body.setTitle("Comment not found error");
+		return body;
+	}
+	@ExceptionHandler(InvalidCommentException.class)
+	ProblemDetail handleInvalidCommentException(InvalidCommentException e) {
+
+		ProblemDetail body = ProblemDetail.forStatusAndDetail(HttpStatusCode.valueOf(500), e.getMessage());
+		body.setTitle("Invalid comment error");
+		return body;
 	}
 }
