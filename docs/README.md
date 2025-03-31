@@ -72,6 +72,7 @@ O sistema deve registrar histórico de edição.
 CREATE TABLE person (
     id_person SERIAL PRIMARY KEY,
     nickname VARCHAR(50) NOT NULL,
+    email TEXT NOT NULL,
     person_password TEXT NOT NULL,
     phone TEXT NOT NULL,
     signin_date TIMESTAMP NOT NULL,
