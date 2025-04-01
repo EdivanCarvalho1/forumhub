@@ -1,8 +1,11 @@
 package br.edu.iff.ccc.bsi.forumhub.controller;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.edu.iff.ccc.bsi.forumhub.assembler.CategoryModel;
 import br.edu.iff.ccc.bsi.forumhub.exception.CategoryNotFoundException;
 import br.edu.iff.ccc.bsi.forumhub.exception.EmptyListException;
 import br.edu.iff.ccc.bsi.forumhub.exception.InvalidCategoryException;
@@ -30,19 +34,24 @@ public class CategoryController {
 	@Autowired
 	CategoryService categoryService;
 	
+	@Autowired
+	private CategoryModel assembler;
+	
 	@GetMapping("/category")
 	@Operation(summary= "Retorna todas as categorias")
-	public ResponseEntity<List<Category>> getCategorys(){
+	public ResponseEntity<CollectionModel<EntityModel<Category>>> getCategories() {
+		List<EntityModel<Category>> categories = categoryService.findAll().orElseThrow(() -> new CategoryNotFoundException())
+			.stream()
+			.map(assembler::toModel)
+			.collect(Collectors.toList());
 		
-		List<Category> categoryList = categoryService.findAll().orElseThrow(() -> new CategoryNotFoundException());
-		
-		if (categoryList.isEmpty()) {
+		if (categories.isEmpty()) {
 			throw new EmptyListException();
 		}
 		
-		return ResponseEntity.ok().body(categoryList);
-		
-	}
+		return ResponseEntity.status(HttpStatus.ACCEPTED).body(CollectionModel.of(categories));
+    }
+
 	
 	@GetMapping("/category/{id}")
 	@Operation(summary= "Retorna uma categoria pelo ID")

@@ -3,6 +3,8 @@ package br.edu.iff.ccc.bsi.forumhub.model;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+import org.springframework.hateoas.RepresentationModel;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import io.swagger.v3.oas.annotations.media.Schema;
