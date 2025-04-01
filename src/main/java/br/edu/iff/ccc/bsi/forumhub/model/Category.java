@@ -3,6 +3,8 @@ package br.edu.iff.ccc.bsi.forumhub.model;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+import org.springframework.hateoas.RepresentationModel;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -27,7 +29,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Table(name = "category")
 @Schema(description = "Category entity")
-public class Category implements Serializable {
+public class Category implements Serializable  {
 	
 	private static final long serialVersionUID = 1L;
 	

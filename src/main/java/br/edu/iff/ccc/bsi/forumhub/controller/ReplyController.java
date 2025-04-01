@@ -29,7 +29,7 @@ public class ReplyController {
 	
 	@GetMapping("/reply")
 	@Operation(summary= "Retorna todas respostas de um comentário")
-	public ResponseEntity<List<Reply>> getReplys(){
+	public ResponseEntity<List<Reply>> getReplies(){
 		
 		List<Reply> replyList = replyService.findAll().orElseThrow(() -> new RuntimeException("Nenhum usuário cadastrado"));
 		
