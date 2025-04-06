@@ -1,8 +1,11 @@
 package br.edu.iff.ccc.bsi.forumhub.controller;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,6 +16,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.edu.iff.ccc.bsi.forumhub.assembler.PostModel;
+import br.edu.iff.ccc.bsi.forumhub.exception.EmptyListException;
+import br.edu.iff.ccc.bsi.forumhub.exception.InvalidPostException;
+import br.edu.iff.ccc.bsi.forumhub.exception.PostNotFoundException;
 import br.edu.iff.ccc.bsi.forumhub.model.Post;
 import br.edu.iff.ccc.bsi.forumhub.service.PostService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -21,60 +28,74 @@ import jakarta.websocket.server.PathParam;
 
 @RestController
 @RequestMapping("/api/v1")
-@Tag(name = "Post", description= "Operações relacionadas a posts")
+@Tag(name = "Post", description = "Operações relacionadas a posts")
 public class PostController {
-	
+
 	@Autowired
-	PostService postService;
-	
+	private PostService postService;
+
+	@Autowired
+	private PostModel assembler;
+
 	@GetMapping("/post")
 	@Operation(summary= "Retorna todos os posts")
-	public ResponseEntity<List<Post>> getPosts(){
+	public ResponseEntity<CollectionModel<EntityModel<Post>>> getPosts(){
 		
-		List<Post> postList = postService.findAll().orElseThrow(() -> new RuntimeException("Nenhum usuário cadastrado"));
+		List<EntityModel<Post>> postList = postService.findAll()
+				.orElseThrow(() -> new PostNotFoundException("Nenhum post cadastrado"))
+				.stream()
+				.map(assembler::toModel)
+                .collect(Collectors.toList());
+        
+        if (postList.isEmpty()) {
+        	throw new EmptyListException("Nenhum post cadastrado");
+        }
 		
-		return ResponseEntity.ok().body(postList);
+		return ResponseEntity.ok().body(CollectionModel.of(postList));
 		
 	}
-	
+
 	@GetMapping("/post/{id}")
-	@Operation(summary= "Retorna um post pelo ID")
-	public ResponseEntity<Post> getPost(@PathParam(value="id") Long id){
+	@Operation(summary = "Retorna um post pelo ID")
+	public ResponseEntity<EntityModel<Post>> getPost(@PathParam(value = "id") Long id) {
+
+		Post post = postService.findOne(id).orElseThrow(() -> new PostNotFoundException("Post não encontrado!"));
 		
-		Post post = postService.findOne(id).orElseThrow(() -> new RuntimeException("Usuário não encontrado!"));
+		EntityModel<Post> postModel = assembler.toModel(post);
 		
-		return ResponseEntity.ok().body(post);
+		return ResponseEntity.status(HttpStatus.ACCEPTED).body(postModel);
 	}
+
 	@PostMapping("/post")
-	@Operation(summary= "Cria um post")
-	public ResponseEntity<Void> postPost(@RequestBody Post post){
-		
-		if(post != null) {
+	@Operation(summary = "Cria um post")
+	public ResponseEntity<Void> postPost(@RequestBody Post post) {
+
+		if (post != null) {
 			postService.postPost(post);
 			return ResponseEntity.status(HttpStatus.CREATED).build();
 		}
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+		throw new InvalidPostException("Post inválido");
 	}
-	
+
 	@DeleteMapping("/post/{id}")
-	@Operation(summary= "Deleta um post pelo ID")
-	public ResponseEntity<Void> deletePost(@PathParam(value = "id") Long id){
-		
-		if(id != null) {
+	@Operation(summary = "Deleta um post pelo ID")
+	public ResponseEntity<Void> deletePost(@PathParam(value = "id") Long id) {
+
+		if (id != null) {
 			postService.deletePost(id);
 			return ResponseEntity.status(HttpStatus.ACCEPTED).build();
 		}
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+		throw new PostNotFoundException("Post não encontrado");
 	}
-	
+
 	@PutMapping("/post/{id}")
-	@Operation(summary= "Atualiza um post pelo ID")
-	public ResponseEntity<Void> updatePost(@PathParam(value = "id") Long id, @RequestBody Post post){
-		
-		if(id != null) {
+	@Operation(summary = "Atualiza um post pelo ID")
+	public ResponseEntity<Void> updatePost(@PathParam(value = "id") Long id, @RequestBody Post post) {
+
+		if (id != null && post != null) {
 			postService.updatePost(id, post);
 			return ResponseEntity.status(HttpStatus.ACCEPTED).build();
 		}
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+		throw new PostNotFoundException("Post não encontrado");
 	}
 }

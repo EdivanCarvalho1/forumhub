@@ -15,9 +15,12 @@ import br.edu.iff.ccc.bsi.forumhub.model.Post;
 public class PostModel implements RepresentationModelAssembler<Post, EntityModel<Post>> {
 
 	@Override
-	public EntityModel<Post> toModel(Post post) {
-		return EntityModel.of(post, linkTo(methodOn(PostController.class).getPost(post.getId())).withSelfRel(),
-				linkTo(methodOn(PostController.class).getPosts()).withRel("posts"));
-	}
-
+    public EntityModel<Post> toModel(Post post) {
+        return EntityModel.of(post,
+                linkTo(methodOn(PostController.class).getPost(post.getId())).withSelfRel(),
+                linkTo(methodOn(PostController.class).getPosts()).withRel("posts"),
+        		linkTo(methodOn(PostController.class).postPost(post)).withRel("createPost"),
+        		linkTo(methodOn(PostController.class).updatePost(post.getId(), post)).withRel("update"),
+        		linkTo(methodOn(PostController.class).deletePost(post.getId())).withRel("delete"));
+    }
 }

@@ -8,4 +8,12 @@ public class InvalidRoleException extends RuntimeException {
 		super(message);
 	}
 
+	public InvalidRoleException() {
+		super("Invalid role.");
+	}
+
+	public InvalidRoleException(Long id) {
+		super("Invalid role with id " + id + ".");
+	}
+
 }

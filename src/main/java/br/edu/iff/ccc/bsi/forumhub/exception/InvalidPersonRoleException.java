@@ -8,4 +8,12 @@ public class InvalidPersonRoleException extends RuntimeException {
 		super("Invalid Person Role");
 	}
 
+	public InvalidPersonRoleException(String message) {
+		super(message);
+	}
+
+	public InvalidPersonRoleException(Long id) {
+		super("Invalid Person Role with id " + id + ".");
+	}
+
 }

@@ -32,7 +32,7 @@ import jakarta.websocket.server.PathParam;
 public class CategoryController {
 	
 	@Autowired
-	CategoryService categoryService;
+	private CategoryService categoryService;
 	
 	@Autowired
 	private CategoryModel assembler;
@@ -40,13 +40,14 @@ public class CategoryController {
 	@GetMapping("/category")
 	@Operation(summary= "Retorna todas as categorias")
 	public ResponseEntity<CollectionModel<EntityModel<Category>>> getCategories() {
-		List<EntityModel<Category>> categories = categoryService.findAll().orElseThrow(() -> new CategoryNotFoundException())
+		List<EntityModel<Category>> categories = categoryService.findAll()
+			.orElseThrow(() -> new CategoryNotFoundException())
 			.stream()
 			.map(assembler::toModel)
 			.collect(Collectors.toList());
 		
 		if (categories.isEmpty()) {
-			throw new EmptyListException();
+			throw new EmptyListException("Nenhuma categoria cadastrada");
 		}
 		
 		return ResponseEntity.status(HttpStatus.ACCEPTED).body(CollectionModel.of(categories));
@@ -55,11 +56,14 @@ public class CategoryController {
 	
 	@GetMapping("/category/{id}")
 	@Operation(summary= "Retorna uma categoria pelo ID")
-	public ResponseEntity<Category> getCategory(@PathParam(value="id") Long id){
+	public ResponseEntity<EntityModel<Category>> getCategory(@PathParam(value="id") Long id){
 		
-		Category category = categoryService.findOne(id).orElseThrow(() -> new CategoryNotFoundException(id));
+		Category category = categoryService.findOne(id)
+				.orElseThrow(() -> new CategoryNotFoundException(id));
+		    
+		EntityModel<Category> categoryModel = assembler.toModel(category);
 		
-		return ResponseEntity.ok().body(category);
+		return ResponseEntity.ok(categoryModel);
 		
 	}
 	@PostMapping("/category")
@@ -71,6 +75,7 @@ public class CategoryController {
 			return ResponseEntity.status(HttpStatus.CREATED).build();
 		}
 		throw new InvalidCategoryException();
+		
 	}
 	
 	@DeleteMapping("/category/{id}")
@@ -88,7 +93,7 @@ public class CategoryController {
 	@Operation(summary= "Atualiza uma categoria pelo ID")
 	public ResponseEntity<Void> updateCategory(@PathParam(value = "id") Long id, @RequestBody Category category){
 		
-		if(id != null) {
+		if(id != null && category != null) {
 			categoryService.updateCategory(id, category);
 			return ResponseEntity.status(HttpStatus.ACCEPTED).build();
 		}

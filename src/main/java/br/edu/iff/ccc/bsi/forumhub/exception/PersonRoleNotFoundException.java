@@ -8,4 +8,8 @@ public class PersonRoleNotFoundException extends RuntimeException {
 		super(message);
 	}
 
+	public PersonRoleNotFoundException() {
+		super("Person role not found.");
+	}
+
 }

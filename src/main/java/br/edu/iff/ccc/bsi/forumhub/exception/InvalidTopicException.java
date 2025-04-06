@@ -7,5 +7,13 @@ public class InvalidTopicException extends RuntimeException {
 	public InvalidTopicException(String message) {
 		super(message);
 	}
+	
+	public InvalidTopicException() {
+		super("Invalid topic.");
+	}
+	
+	public InvalidTopicException(Long id) {
+		super("Invalid topic with id " + id + ".");
+	}
 
 }

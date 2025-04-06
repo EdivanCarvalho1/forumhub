@@ -8,4 +8,12 @@ public class InvalidPunishmentException extends RuntimeException {
 		super(message);
 	}
 
+	public InvalidPunishmentException() {
+		super("Invalid punishment.");
+	}
+
+	public InvalidPunishmentException(Long id) {
+		super("Invalid punishment with id " + id + ".");
+	}
+
 }

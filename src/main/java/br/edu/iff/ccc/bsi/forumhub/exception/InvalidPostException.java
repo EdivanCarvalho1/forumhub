@@ -8,4 +8,12 @@ public class InvalidPostException extends RuntimeException {
 		super(message);
 	}
 
+	public InvalidPostException() {
+		super("Invalid post.");
+	}
+
+	public InvalidPostException(Long id) {
+		super("Invalid post with id " + id + ".");
+	}
+
 }

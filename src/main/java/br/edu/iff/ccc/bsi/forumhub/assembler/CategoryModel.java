@@ -13,12 +13,15 @@ import br.edu.iff.ccc.bsi.forumhub.model.Category;
 @Component
 public class CategoryModel implements RepresentationModelAssembler<Category, EntityModel<Category>> {
 
-
-    @Override
+	@Override
     public EntityModel<Category> toModel(Category category) {
         return EntityModel.of(category,
                 linkTo(methodOn(CategoryController.class).getCategory(category.getId())).withSelfRel(),
-                linkTo(methodOn(CategoryController.class).getCategories()).withRel("categories"));
+                linkTo(methodOn(CategoryController.class).getCategories()).withRel("categories"),
+        		linkTo(methodOn(CategoryController.class).postCategory(category)).withRel("post"),
+        		linkTo(methodOn(CategoryController.class).updateCategory(category.getId(), category)).withRel("update"),
+        		linkTo(methodOn(CategoryController.class).deleteCategory(category.getId())).withRel("delete"));
+
     }
 
 }

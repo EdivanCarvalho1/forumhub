@@ -13,9 +13,14 @@ import br.edu.iff.ccc.bsi.forumhub.model.Person;
 public class PersonModel implements RepresentationModelAssembler<Person, EntityModel<Person>> {
 
 	@Override
-	public EntityModel<Person> toModel(Person person) {
-		return EntityModel.of(person, linkTo(methodOn(PersonController.class).getPerson(person.getId())).withSelfRel(),
-				linkTo(methodOn(PersonController.class).getPersons()).withRel("persons"));
-	}
+    public EntityModel<Person> toModel(Person person) {
+        return EntityModel.of(person,
+                linkTo(methodOn(PersonController.class).getPerson(person.getId())).withSelfRel(),
+                linkTo(methodOn(PersonController.class).getPersons()).withRel("persons"),
+        		linkTo(methodOn(PersonController.class).postPerson(person)).withRel("post"),
+        		linkTo(methodOn(PersonController.class).updatePerson(person.getId(), person)).withRel("update"),
+        		linkTo(methodOn(PersonController.class).deletePerson(person.getId())).withRel("delete"));
+
+    }
 
 }

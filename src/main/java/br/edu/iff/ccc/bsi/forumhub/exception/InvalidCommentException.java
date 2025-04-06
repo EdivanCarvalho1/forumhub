@@ -8,4 +8,12 @@ public class InvalidCommentException extends RuntimeException {
 		super("Invalid comment.");
 	}
 
+	public InvalidCommentException(Long id) {
+		super("Invalid comment with id " + id + ".");
+	}
+
+	public InvalidCommentException(String message) {
+		super(message);
+	}
+
 }

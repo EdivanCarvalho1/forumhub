@@ -1,8 +1,11 @@
 package br.edu.iff.ccc.bsi.forumhub.controller;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,6 +16,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.edu.iff.ccc.bsi.forumhub.assembler.PunishmentModel;
+import br.edu.iff.ccc.bsi.forumhub.exception.InvalidPunishmentException;
+import br.edu.iff.ccc.bsi.forumhub.exception.PunishmentNotFoundException;
 import br.edu.iff.ccc.bsi.forumhub.model.Punishment;
 import br.edu.iff.ccc.bsi.forumhub.service.PunishmentService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -25,25 +31,34 @@ import jakarta.websocket.server.PathParam;
 public class PunishmentController {
 	
 	@Autowired
-	PunishmentService punishmentService;
+	private PunishmentService punishmentService;
+	
+	@Autowired
+	private PunishmentModel assembler;
 	
 	@GetMapping("/punishment")
 	@Operation(summary= "Retorna todos os tipos de punições")
-	public ResponseEntity<List<Punishment>> getPunishments(){
+	public ResponseEntity<CollectionModel<EntityModel<Punishment>>> getPunishments(){
 		
-		List<Punishment> punishmentList = punishmentService.findAll().orElseThrow(() -> new RuntimeException("Nenhum usuário cadastrado"));
+		List<EntityModel<Punishment>> punishmentList = punishmentService.findAll()
+				.orElseThrow(() -> new PunishmentNotFoundException("Nenhuma punição cadastrada"))
+				.stream()
+				.map(assembler::toModel)
+				.collect(Collectors.toList());
 		
-		return ResponseEntity.ok().body(punishmentList);
+		return ResponseEntity.status(HttpStatus.ACCEPTED).body(CollectionModel.of(punishmentList));
 		
 	}
 	
 	@GetMapping("/punishment/{id}")
 	@Operation(summary= "Retorna um tipo punição pelo ID")
-	public ResponseEntity<Punishment> getPunishment(@PathParam(value="id") Long id){
+	public ResponseEntity<EntityModel<Punishment>> getPunishment(@PathParam(value="id") Long id){
 		
-		Punishment punishment = punishmentService.findOne(id).orElseThrow(() -> new RuntimeException("Usuário não encontrado!"));
+		Punishment punishment = punishmentService.findOne(id).orElseThrow(() -> new PunishmentNotFoundException("Punição não encontrada!"));
 		
-		return ResponseEntity.ok().body(punishment);
+		EntityModel<Punishment> punishmentModel = assembler.toModel(punishment);
+		
+		return ResponseEntity.status(HttpStatus.ACCEPTED).body(punishmentModel);
 	}
 	@PostMapping("/punishment")
 	@Operation(summary= "Cria um tipo punição")
@@ -53,7 +68,7 @@ public class PunishmentController {
 			punishmentService.postPunishment(punishment);
 			return ResponseEntity.status(HttpStatus.CREATED).build();
 		}
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+		throw new InvalidPunishmentException("Punição inválida");
 	}
 	
 	@DeleteMapping("/punishment/{id}")
@@ -64,17 +79,17 @@ public class PunishmentController {
 			punishmentService.deletePunishment(id);
 			return ResponseEntity.status(HttpStatus.ACCEPTED).build();
 		}
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+		throw new InvalidPunishmentException("ID inválido");
 	}
 	
 	@PutMapping("/punishment/{id}")
 	@Operation(summary= "Atualiza um tipo de punição pelo ID")
 	public ResponseEntity<Void> updatePunishment(@PathParam(value = "id") Long id, @RequestBody Punishment punishment){
 		
-		if(id != null) {
+		if(id != null && punishment != null) {
 			punishmentService.updatePunishment(id, punishment);
 			return ResponseEntity.status(HttpStatus.ACCEPTED).build();
 		}
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+		throw new InvalidPunishmentException("ID inválido");
 	}
 }

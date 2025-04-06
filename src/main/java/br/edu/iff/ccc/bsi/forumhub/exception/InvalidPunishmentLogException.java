@@ -8,4 +8,12 @@ public class InvalidPunishmentLogException extends RuntimeException {
 		super(message);
 	}
 
+	public InvalidPunishmentLogException() {
+		super("Invalid punishment log.");
+	}
+
+	public InvalidPunishmentLogException(Long id) {
+		super("Invalid punishment log with id " + id + ".");
+	}
+
 }

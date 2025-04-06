@@ -8,4 +8,12 @@ public class InvalidPersonException extends RuntimeException {
 		super(message);
 	}
 
+	public InvalidPersonException() {
+		super("Invalid person.");
+	}
+
+	public InvalidPersonException(Long id) {
+		super("Invalid person with id " + id + ".");
+	}
+
 }

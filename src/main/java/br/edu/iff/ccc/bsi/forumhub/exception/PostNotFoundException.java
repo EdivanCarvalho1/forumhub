@@ -8,4 +8,8 @@ public class PostNotFoundException extends RuntimeException {
 		super(message);
 	}
 
+	public PostNotFoundException() {
+		super("Post not found.");
+	}
+
 }

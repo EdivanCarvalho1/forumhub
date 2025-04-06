@@ -7,4 +7,12 @@ public class InvalidCategoryException extends RuntimeException{
 	public InvalidCategoryException() {
 		super("Invalid category.");
 	}
+
+	public InvalidCategoryException(Long id) {
+		super("Invalid category with id " + id + ".");
+	}
+
+	public InvalidCategoryException(String message) {
+		super(message);
+	}
 }
