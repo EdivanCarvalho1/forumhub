@@ -8,11 +8,8 @@ public class PersonNotFoundException extends RuntimeException {
 		super("Person not found with ID " + id);
 	}
 
-	public PersonNotFoundException(String email) {
-		super("Person not found with email " + email);
+	public PersonNotFoundException(String message) {
+		super(message);
 	}
-
-	public PersonNotFoundException(String email, String password) {
-		super("Person not found with email " + email + " and password " + password);
-	}
+	
 }

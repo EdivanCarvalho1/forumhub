@@ -1,8 +1,11 @@
 package br.edu.iff.ccc.bsi.forumhub.controller;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,6 +16,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.edu.iff.ccc.bsi.forumhub.assembler.PersonRoleModel;
+import br.edu.iff.ccc.bsi.forumhub.exception.EmptyListException;
+import br.edu.iff.ccc.bsi.forumhub.exception.InvalidPersonRoleException;
+import br.edu.iff.ccc.bsi.forumhub.exception.PersonRoleNotFoundException;
 import br.edu.iff.ccc.bsi.forumhub.model.PersonRole;
 import br.edu.iff.ccc.bsi.forumhub.service.PersonRoleService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -25,25 +32,38 @@ import jakarta.websocket.server.PathParam;
 public class PersonRoleController {
 	
 	@Autowired
-	PersonRoleService personRoleService;
+	private PersonRoleService personRoleService;
+	
+	@Autowired
+	private PersonRoleModel assembler;
 	
 	@GetMapping("/personrole")
 	@Operation(summary= "Retorna todas as roles de pessoas")
-	public ResponseEntity<List<PersonRole>> getPersonRoles(){
+	public ResponseEntity<CollectionModel<EntityModel<PersonRole>>> getPersonRoles(){
 		
-		List<PersonRole> personroleList = personRoleService.findAll().orElseThrow(() -> new RuntimeException("Nenhum usuário cadastrado"));
+		List<EntityModel<PersonRole>> personRoleList = personRoleService.findAll()
+				.orElseThrow(() -> new PersonRoleNotFoundException("Nenhuma role de usuário cadastrada!"))
+				.stream()
+				.map(assembler::toModel)
+				.collect(Collectors.toList());
 		
-		return ResponseEntity.ok().body(personroleList);
+		if (personRoleList.isEmpty()) {
+			throw new EmptyListException();
+		}
+		
+		return ResponseEntity.status(HttpStatus.ACCEPTED).body(CollectionModel.of(personRoleList));
 		
 	}
 	
 	@GetMapping("/personrole/{id}")
 	@Operation(summary= "Retorna uma role de pessoa pelo ID")
-	public ResponseEntity<PersonRole> getPersonRole(@PathParam(value="id") Long id){
+	public ResponseEntity<EntityModel<PersonRole>> getPersonRole(@PathParam(value="id") Long id){
 		
-		PersonRole personrole = personRoleService.findOne(id).orElseThrow(() -> new RuntimeException("Usuário não encontrado!"));
+		PersonRole personrole = personRoleService.findOne(id).orElseThrow(() -> new PersonRoleNotFoundException("Role de usuário não encontrada!"));
 		
-		return ResponseEntity.ok().body(personrole);
+		EntityModel<PersonRole> personRoleModel = assembler.toModel(personrole);
+		
+		return ResponseEntity.status(HttpStatus.ACCEPTED).body(personRoleModel);
 	}
 	
 	
@@ -55,7 +75,7 @@ public class PersonRoleController {
 			personRoleService.postPersonRole(personRole);
 			return ResponseEntity.status(HttpStatus.CREATED).build();
 		}
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+		throw new InvalidPersonRoleException("Role de usuário inválida!");
 	}
 	
 	@DeleteMapping("/personrole/{id}")
@@ -66,17 +86,17 @@ public class PersonRoleController {
 			personRoleService.deletePersonRole(id);
 			return ResponseEntity.status(HttpStatus.ACCEPTED).build();
 		}
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+		throw new InvalidPersonRoleException("Role de usuário inválida!");
 	}
 	
 	@PutMapping("/personrole/{id}")
 	@Operation(summary= "Atualiza uma role de pessoa pelo ID")
 	public ResponseEntity<Void> updatePersonRole(@PathParam(value = "id") Long id, @RequestBody PersonRole personRole){
 		
-		if(id != null) {
+		if(id != null && personRole != null) {
 			personRoleService.updatePersonRole(id, personRole);
 			return ResponseEntity.status(HttpStatus.ACCEPTED).build();
 		}
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+		throw new InvalidPersonRoleException("Role de usuário inválida!");
 	}
 }

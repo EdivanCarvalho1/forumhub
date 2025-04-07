@@ -1,8 +1,11 @@
 package br.edu.iff.ccc.bsi.forumhub.controller;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,6 +16,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.edu.iff.ccc.bsi.forumhub.assembler.TopicModel;
+import br.edu.iff.ccc.bsi.forumhub.exception.InvalidTopicException;
+import br.edu.iff.ccc.bsi.forumhub.exception.TopicNotFoundException;
 import br.edu.iff.ccc.bsi.forumhub.model.Topic;
 import br.edu.iff.ccc.bsi.forumhub.service.TopicService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -25,25 +31,34 @@ import jakarta.websocket.server.PathParam;
 public class TopicController {
 	
 	@Autowired
-	TopicService topicService;
+	private TopicService topicService;
+	
+	@Autowired
+	private TopicModel assembler;
 	
 	@GetMapping("/topic")
 	@Operation(summary= "Retorna todos os tópicos")
-	public ResponseEntity<List<Topic>> getTopics(){
+	public ResponseEntity<CollectionModel<EntityModel<Topic>>> getTopics(){
 		
-		List<Topic> topicList = topicService.findAll().orElseThrow(() -> new RuntimeException("Nenhum usuário cadastrado"));
+		List<EntityModel<Topic>> topicList = topicService.findAll()
+				.orElseThrow(() -> new TopicNotFoundException("Nenhum tópico cadastrado"))
+				.stream()
+				.map(assembler::toModel)
+				.collect(Collectors.toList());
 		
-		return ResponseEntity.ok().body(topicList);
+		return ResponseEntity.status(HttpStatus.ACCEPTED).body(CollectionModel.of(topicList));
 		
 	}
 	
 	@GetMapping("/topic/{id}")
 	@Operation(summary= "Retorna um tópico específico")
-	public ResponseEntity<Topic> getTopic(@PathParam(value="id") Long id){
+	public ResponseEntity<EntityModel<Topic>> getTopic(@PathParam(value="id") Long id){
 		
-		Topic topic = topicService.findOne(id).orElseThrow(() -> new RuntimeException("Usuário não encontrado!"));
+		Topic topic = topicService.findOne(id).orElseThrow(() -> new TopicNotFoundException("Tópico não encontrado!"));
 		
-		return ResponseEntity.ok().body(topic);
+		EntityModel<Topic> topicModel = assembler.toModel(topic);
+		
+		return ResponseEntity.status(HttpStatus.ACCEPTED).body(topicModel);
 	}
 	@PostMapping("/topic")
 	@Operation(summary= "Cria um tópico")
@@ -53,7 +68,7 @@ public class TopicController {
 			topicService.postTopic(topic);
 			return ResponseEntity.status(HttpStatus.CREATED).build();
 		}
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+		throw new InvalidTopicException("Tópico inválido");
 	}
 	
 	@DeleteMapping("/topic/{id}")
@@ -64,17 +79,17 @@ public class TopicController {
 			topicService.deleteTopic(id);
 			return ResponseEntity.status(HttpStatus.ACCEPTED).build();
 		}
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+		throw new TopicNotFoundException("Tópico não encontrado!");
 	}
 	
 	@PutMapping("/topic/{id}")
 	@Operation(summary= "Atualiza um tópico pelo ID")
 	public ResponseEntity<Void> updateTopic(@PathParam(value = "id") Long id, @RequestBody Topic topic){
 		
-		if(id != null) {
+		if(id != null && topic != null) {
 			topicService.updateTopic(id, topic);
 			return ResponseEntity.status(HttpStatus.ACCEPTED).build();
 		}
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+		throw new InvalidTopicException("Tópico inválido");
 	}
 }

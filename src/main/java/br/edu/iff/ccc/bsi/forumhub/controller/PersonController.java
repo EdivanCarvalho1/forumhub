@@ -1,8 +1,11 @@
 package br.edu.iff.ccc.bsi.forumhub.controller;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,6 +16,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.edu.iff.ccc.bsi.forumhub.assembler.PersonModel;
+import br.edu.iff.ccc.bsi.forumhub.exception.EmptyListException;
+import br.edu.iff.ccc.bsi.forumhub.exception.InvalidPersonException;
+import br.edu.iff.ccc.bsi.forumhub.exception.PersonNotFoundException;
 import br.edu.iff.ccc.bsi.forumhub.model.Person;
 import br.edu.iff.ccc.bsi.forumhub.service.PersonService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -25,25 +32,37 @@ import jakarta.websocket.server.PathParam;
 public class PersonController {
 	
 	@Autowired
-	PersonService personService;
+	private PersonService personService;
+	
+	@Autowired
+	private PersonModel assembler;
 	
 	@GetMapping("/person")
 	@Operation(summary= "Retorna todas as pessoas/users")
-	public ResponseEntity<List<Person>> getPersons(){
+	public ResponseEntity<CollectionModel<EntityModel<Person>>> getPersons(){
 		
-		List<Person> personList = personService.findAll().orElseThrow(() -> new RuntimeException("Nenhum usuário cadastrado"));
+		List<EntityModel<Person>> personList = personService.findAll()
+				.orElseThrow(() -> new PersonNotFoundException("Nenhum usuário cadastrado"))
+				.stream()
+				.map(assembler::toModel)
+				.collect(Collectors.toList());
 		
-		return ResponseEntity.ok().body(personList);
+		if (personList.isEmpty()) {
+			throw new EmptyListException("Nenhum usuário cadastrado");
+		}
 		
+		return ResponseEntity.status(HttpStatus.ACCEPTED).body(CollectionModel.of(personList));
 	}
 	
 	@GetMapping("/person/{id}")
 	@Operation(summary= "Retorna uma pessoa pelo ID")
-	public ResponseEntity<Person> getPerson(@PathParam(value="id") Long id){
+	public ResponseEntity<EntityModel<Person>> getPerson(@PathParam(value="id") Long id){
 		
 		Person person = personService.findOne(id).orElseThrow(() -> new RuntimeException("Usuário não encontrado!"));
 		
-		return ResponseEntity.ok().body(person);
+		EntityModel<Person> personModel = assembler.toModel(person);
+		
+		return ResponseEntity.status(HttpStatus.ACCEPTED).body(personModel);
 	}
 	
 	
@@ -55,7 +74,7 @@ public class PersonController {
 			personService.postPerson(person);
 			return ResponseEntity.status(HttpStatus.CREATED).build();
 		}
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+		throw new InvalidPersonException("Usuário inválido!");
 	}
 	
 	@DeleteMapping("/person/{id}")
@@ -66,17 +85,17 @@ public class PersonController {
 			personService.deletePerson(id);
 			return ResponseEntity.status(HttpStatus.ACCEPTED).build();
 		}
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+		throw new InvalidPersonException("Usuário inválido!");
 	}
 	
 	@PutMapping("/person/{id}")
 	@Operation(summary= "Atualiza uma pessoa pelo ID")
 	public ResponseEntity<Void> updatePerson(@PathParam(value = "id") Long id, @RequestBody Person person){
 		
-		if(id != null) {
+		if(id != null && person != null) {
 			personService.updatePerson(id, person);
 			return ResponseEntity.status(HttpStatus.ACCEPTED).build();
 		}
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+		throw new InvalidPersonException("Usuário inválido!");
 	}
 }

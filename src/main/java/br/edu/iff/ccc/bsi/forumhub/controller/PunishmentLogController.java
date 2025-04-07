@@ -1,8 +1,11 @@
 package br.edu.iff.ccc.bsi.forumhub.controller;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,6 +16,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.edu.iff.ccc.bsi.forumhub.assembler.PunishmentLogModel;
+import br.edu.iff.ccc.bsi.forumhub.exception.InvalidPunishmentLogException;
+import br.edu.iff.ccc.bsi.forumhub.exception.PunishmentLogNotFoundException;
 import br.edu.iff.ccc.bsi.forumhub.model.PunishmentLog;
 import br.edu.iff.ccc.bsi.forumhub.service.PunishmentLogService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -24,25 +30,34 @@ import jakarta.websocket.server.PathParam;
 @Tag(name = "Punishment Log", description= "Operações relacionadas a log de punições")
 public class PunishmentLogController {
 	@Autowired
-	PunishmentLogService punishmentLogService;
+	private PunishmentLogService punishmentLogService;
+	
+	@Autowired
+	private PunishmentLogModel assembler;
 	
 	@GetMapping("/punishmentLog")
 	@Operation(summary= "Retorna o log de punições")
-	public ResponseEntity<List<PunishmentLog>> getPunishmentLogs(){
+	public ResponseEntity<CollectionModel<EntityModel<PunishmentLog>>> getPunishmentLogs(){
 		
-		List<PunishmentLog> punishmentLogList = punishmentLogService.findAll().orElseThrow(() -> new RuntimeException("Nenhum usuário cadastrado"));
+		List<EntityModel<PunishmentLog>> punishmentLogList = punishmentLogService.findAll()
+				.orElseThrow(() -> new PunishmentLogNotFoundException("Nenhum log de punição cadastrado"))
+				.stream()
+				.map(assembler::toModel)
+				.collect(Collectors.toList());
 		
-		return ResponseEntity.ok().body(punishmentLogList);
+		return ResponseEntity.status(HttpStatus.ACCEPTED).body(CollectionModel.of(punishmentLogList));
 		
 	}
 	
 	@GetMapping("/punishmentLog/{id}")
 	@Operation(summary= "Retorna um log de punição específico")
-	public ResponseEntity<PunishmentLog> getPunishmentLog(@PathParam(value="id") Long id){
+	public ResponseEntity<EntityModel<PunishmentLog>> getPunishmentLog(@PathParam(value="id") Long id){
 		
-		PunishmentLog punishmentLog = punishmentLogService.findOne(id).orElseThrow(() -> new RuntimeException("Usuário não encontrado!"));
+		PunishmentLog punishmentLog = punishmentLogService.findOne(id).orElseThrow(() -> new PunishmentLogNotFoundException("Log não encontrado!"));
 		
-		return ResponseEntity.ok().body(punishmentLog);
+		EntityModel<PunishmentLog> punishmentLogModel = assembler.toModel(punishmentLog);
+		
+		return ResponseEntity.status(HttpStatus.ACCEPTED).body(punishmentLogModel);
 	}
 	@PostMapping("/punishmentLog")
 	@Operation(summary= "Aplica uma punição")
@@ -52,7 +67,7 @@ public class PunishmentLogController {
 			punishmentLogService.postPunishmentLog(punishmentLog);
 			return ResponseEntity.status(HttpStatus.CREATED).build();
 		}
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+		throw new InvalidPunishmentLogException("Punição inválida");
 	}
 	
 	@DeleteMapping("/punishmentLog/{id}")
@@ -63,17 +78,17 @@ public class PunishmentLogController {
 			punishmentLogService.deletePunishmentLog(id);
 			return ResponseEntity.status(HttpStatus.ACCEPTED).build();
 		}
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+		throw new PunishmentLogNotFoundException("Punição não encontrada!");
 	}
 	
 	@PutMapping("/punishmentLog/{id}")
 	@Operation(summary= "Atualiza uma punição pelo ID")
 	public ResponseEntity<Void> updatePunishmentLog(@PathParam(value = "id") Long id, @RequestBody PunishmentLog punishmentLog){
 		
-		if(id != null) {
+		if(id != null && punishmentLog != null) {
 			punishmentLogService.updatePunishmentLog(id, punishmentLog);
 			return ResponseEntity.status(HttpStatus.ACCEPTED).build();
 		}
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+		throw new InvalidPunishmentLogException("Punição inválida");
 	}
 }

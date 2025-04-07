@@ -1,8 +1,11 @@
 package br.edu.iff.ccc.bsi.forumhub.controller;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,6 +16,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.edu.iff.ccc.bsi.forumhub.assembler.RoleModel;
+import br.edu.iff.ccc.bsi.forumhub.exception.InvalidRoleException;
+import br.edu.iff.ccc.bsi.forumhub.exception.RoleNotFoundException;
 import br.edu.iff.ccc.bsi.forumhub.model.Role;
 import br.edu.iff.ccc.bsi.forumhub.service.RoleService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -25,26 +31,34 @@ import jakarta.websocket.server.PathParam;
 public class RoleController {
 
 	@Autowired
-	RoleService roleService;
+	private RoleService roleService;
+	
+	@Autowired
+	private RoleModel assembler;
 
 	@GetMapping("/role")
 	@Operation(summary = "Retorna todas as pessoas/users")
-	public ResponseEntity<List<Role>> getRoles() {
+	public ResponseEntity<CollectionModel<EntityModel<Role>>> getRoles() {
 
-		List<Role> roleList = roleService.findAll()
-				.orElseThrow(() -> new RuntimeException("Nenhum usuário cadastrado"));
+		List<EntityModel<Role>> roleList = roleService.findAll()
+				.orElseThrow(() -> new RoleNotFoundException("Nenhuma role cadastrada!"))
+				.stream()
+				.map(assembler::toModel)
+				.collect(Collectors.toList());
 
-		return ResponseEntity.ok().body(roleList);
+		return ResponseEntity.status(HttpStatus.ACCEPTED).body(CollectionModel.of(roleList));
 
 	}
 
 	@GetMapping("/role/{id}")
 	@Operation(summary = "Retorna uma pessoa pelo ID")
-	public ResponseEntity<Role> getRole(@PathParam(value = "id") Long id) {
+	public ResponseEntity<EntityModel<Role>> getRole(@PathParam(value = "id") Long id) {
 
-		Role role = roleService.findOne(id).orElseThrow(() -> new RuntimeException("Usuário não encontrado!"));
+		Role role = roleService.findOne(id).orElseThrow(() -> new RoleNotFoundException("Role não encontrada!"));
+		
+		EntityModel<Role> roleModel = assembler.toModel(role);
 
-		return ResponseEntity.ok().body(role);
+		return ResponseEntity.status(HttpStatus.ACCEPTED).body(roleModel);
 	}
 
 	@PostMapping("/role")
@@ -55,7 +69,7 @@ public class RoleController {
 			roleService.postRole(role);
 			return ResponseEntity.status(HttpStatus.CREATED).build();
 		}
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+		throw new InvalidRoleException("Usuário inválido");
 	}
 
 	@DeleteMapping("/role/{id}")
@@ -66,17 +80,17 @@ public class RoleController {
 			roleService.deleteRole(id);
 			return ResponseEntity.status(HttpStatus.ACCEPTED).build();
 		}
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+		throw new InvalidRoleException("ID inválido");
 	}
 
 	@PutMapping("/role/{id}")
 	@Operation(summary = "Atualiza uma pessoa pelo ID")
 	public ResponseEntity<Void> updateRole(@PathParam(value = "id") Long id, @RequestBody Role role) {
 
-		if (id != null) {
+		if (id != null && role != null) {
 			roleService.updateRole(id, role);
 			return ResponseEntity.status(HttpStatus.ACCEPTED).build();
 		}
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+		throw new InvalidRoleException("ID inválido");
 	}
 }

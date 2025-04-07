@@ -1,8 +1,11 @@
 package br.edu.iff.ccc.bsi.forumhub.controller;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.edu.iff.ccc.bsi.forumhub.assembler.CategoryModel;
 import br.edu.iff.ccc.bsi.forumhub.exception.CategoryNotFoundException;
 import br.edu.iff.ccc.bsi.forumhub.exception.EmptyListException;
 import br.edu.iff.ccc.bsi.forumhub.exception.InvalidCategoryException;
@@ -28,29 +32,38 @@ import jakarta.websocket.server.PathParam;
 public class CategoryController {
 	
 	@Autowired
-	CategoryService categoryService;
+	private CategoryService categoryService;
+	
+	@Autowired
+	private CategoryModel assembler;
 	
 	@GetMapping("/category")
 	@Operation(summary= "Retorna todas as categorias")
-	public ResponseEntity<List<Category>> getCategorys(){
+	public ResponseEntity<CollectionModel<EntityModel<Category>>> getCategories() {
+		List<EntityModel<Category>> categories = categoryService.findAll()
+			.orElseThrow(() -> new CategoryNotFoundException())
+			.stream()
+			.map(assembler::toModel)
+			.collect(Collectors.toList());
 		
-		List<Category> categoryList = categoryService.findAll().orElseThrow(() -> new CategoryNotFoundException());
-		
-		if (categoryList.isEmpty()) {
-			throw new EmptyListException();
+		if (categories.isEmpty()) {
+			throw new EmptyListException("Nenhuma categoria cadastrada");
 		}
 		
-		return ResponseEntity.ok().body(categoryList);
-		
-	}
+		return ResponseEntity.status(HttpStatus.ACCEPTED).body(CollectionModel.of(categories));
+    }
+
 	
 	@GetMapping("/category/{id}")
 	@Operation(summary= "Retorna uma categoria pelo ID")
-	public ResponseEntity<Category> getCategory(@PathParam(value="id") Long id){
+	public ResponseEntity<EntityModel<Category>> getCategory(@PathParam(value="id") Long id){
 		
-		Category category = categoryService.findOne(id).orElseThrow(() -> new CategoryNotFoundException(id));
+		Category category = categoryService.findOne(id)
+				.orElseThrow(() -> new CategoryNotFoundException(id));
+		    
+		EntityModel<Category> categoryModel = assembler.toModel(category);
 		
-		return ResponseEntity.ok().body(category);
+		return ResponseEntity.ok(categoryModel);
 		
 	}
 	@PostMapping("/category")
@@ -62,6 +75,7 @@ public class CategoryController {
 			return ResponseEntity.status(HttpStatus.CREATED).build();
 		}
 		throw new InvalidCategoryException();
+		
 	}
 	
 	@DeleteMapping("/category/{id}")
@@ -79,7 +93,7 @@ public class CategoryController {
 	@Operation(summary= "Atualiza uma categoria pelo ID")
 	public ResponseEntity<Void> updateCategory(@PathParam(value = "id") Long id, @RequestBody Category category){
 		
-		if(id != null) {
+		if(id != null && category != null) {
 			categoryService.updateCategory(id, category);
 			return ResponseEntity.status(HttpStatus.ACCEPTED).build();
 		}

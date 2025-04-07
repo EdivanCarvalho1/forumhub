@@ -1,8 +1,11 @@
 package br.edu.iff.ccc.bsi.forumhub.controller;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,6 +16,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.edu.iff.ccc.bsi.forumhub.assembler.ReplyModel;
+import br.edu.iff.ccc.bsi.forumhub.exception.InvalidReplyException;
+import br.edu.iff.ccc.bsi.forumhub.exception.ReplyNotFoundException;
 import br.edu.iff.ccc.bsi.forumhub.model.Reply;
 import br.edu.iff.ccc.bsi.forumhub.service.ReplyService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -25,25 +31,34 @@ import jakarta.websocket.server.PathParam;
 public class ReplyController {
 	
 	@Autowired
-	ReplyService replyService;
+	private ReplyService replyService;
+	
+	@Autowired
+	private ReplyModel assembler;
 	
 	@GetMapping("/reply")
 	@Operation(summary= "Retorna todas respostas de um comentário")
-	public ResponseEntity<List<Reply>> getReplys(){
+	public ResponseEntity<CollectionModel<EntityModel<Reply>>> getReplies(){
 		
-		List<Reply> replyList = replyService.findAll().orElseThrow(() -> new RuntimeException("Nenhum usuário cadastrado"));
+		List<EntityModel<Reply>> replyList = replyService.findAll()
+				.orElseThrow(() -> new ReplyNotFoundException("Nenhum usuário cadastrado"))
+				.stream()
+				.map(assembler::toModel)
+				.collect(Collectors.toList());
 		
-		return ResponseEntity.ok().body(replyList);
+		return ResponseEntity.status(HttpStatus.ACCEPTED).body(CollectionModel.of(replyList));
 		
 	}
 	
 	@GetMapping("/reply/{id}")
 	@Operation(summary= "Retorna uma resposta de comentário")
-	public ResponseEntity<Reply> getReply(@PathParam(value="id") Long id){
+	public ResponseEntity<EntityModel<Reply>> getReply(@PathParam(value="id") Long id){
 		
-		Reply reply = replyService.findOne(id).orElseThrow(() -> new RuntimeException("Usuário não encontrado!"));
+		Reply reply = replyService.findOne(id).orElseThrow(() -> new ReplyNotFoundException("Usuário não encontrado!"));
 		
-		return ResponseEntity.ok().body(reply);
+		EntityModel<Reply> replyModel = assembler.toModel(reply);
+		
+		return ResponseEntity.status(HttpStatus.ACCEPTED).body(replyModel);
 	}
 	@PostMapping("/reply")
 	@Operation(summary= "Cria uma resposta de comentário")
@@ -53,7 +68,7 @@ public class ReplyController {
 			replyService.postReply(reply);
 			return ResponseEntity.status(HttpStatus.CREATED).build();
 		}
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+		throw new InvalidReplyException("Resposta inválida");
 	}
 	
 	@DeleteMapping("/reply/{id}")
@@ -64,17 +79,17 @@ public class ReplyController {
 			replyService.deleteReply(id);
 			return ResponseEntity.status(HttpStatus.ACCEPTED).build();
 		}
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+		throw new InvalidReplyException("Resposta não encontrada!");
 	}
 	
 	@PutMapping("/reply/{id}")
 	@Operation(summary= "Atualiza uma resposta de comentário")
 	public ResponseEntity<Void> updateReply(@PathParam(value = "id") Long id, @RequestBody Reply updatedReply){
 		
-		if(id != null) {
+		if(id != null && updatedReply != null) {
 			replyService.updateReply(id, updatedReply);
 			return ResponseEntity.status(HttpStatus.ACCEPTED).build();
 		}
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+		throw new InvalidReplyException("Resposta inválida");
 	}
 }
