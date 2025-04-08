@@ -49,6 +49,6 @@ public class Punishment implements Serializable {
 	@Column(name = "punishment_period", nullable = false)
 	@NotNull
 	@Future
-	@Schema(description = "Punishment period", example = "PT1H")
-	private Duration periodo;
+	@Schema(description = "Punishment period", example = "1 day")
+	private String periodo;
 }

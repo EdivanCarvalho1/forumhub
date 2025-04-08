@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -72,7 +73,7 @@ public class PunishmentLogController {
 	
 	@DeleteMapping("/punishmentLog/{id}")
 	@Operation(summary= "Deleta uma punição pelo ID")
-	public ResponseEntity<Void> deletePunishmentLog(@PathParam(value = "id") Long id){
+	public ResponseEntity<Void> deletePunishmentLog(@PathVariable Long id){
 		
 		if(id != null) {
 			punishmentLogService.deletePunishmentLog(id);
@@ -83,7 +84,7 @@ public class PunishmentLogController {
 	
 	@PutMapping("/punishmentLog/{id}")
 	@Operation(summary= "Atualiza uma punição pelo ID")
-	public ResponseEntity<Void> updatePunishmentLog(@PathParam(value = "id") Long id, @RequestBody PunishmentLog punishmentLog){
+	public ResponseEntity<Void> updatePunishmentLog(@PathVariable Long id, @RequestBody PunishmentLog punishmentLog){
 		
 		if(id != null && punishmentLog != null) {
 			punishmentLogService.updatePunishmentLog(id, punishmentLog);

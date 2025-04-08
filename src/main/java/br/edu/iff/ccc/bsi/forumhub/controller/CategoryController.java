@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,7 +25,7 @@ import br.edu.iff.ccc.bsi.forumhub.model.Category;
 import br.edu.iff.ccc.bsi.forumhub.service.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.websocket.server.PathParam;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -56,7 +57,7 @@ public class CategoryController {
 	
 	@GetMapping("/category/{id}")
 	@Operation(summary= "Retorna uma categoria pelo ID")
-	public ResponseEntity<EntityModel<Category>> getCategory(@PathParam(value="id") Long id){
+	public ResponseEntity<EntityModel<Category>> getCategory(@PathVariable Long id){
 		
 		Category category = categoryService.findOne(id)
 				.orElseThrow(() -> new CategoryNotFoundException(id));
@@ -80,7 +81,7 @@ public class CategoryController {
 	
 	@DeleteMapping("/category/{id}")
 	@Operation(summary= "Deleta uma categoria pelo ID")
-	public ResponseEntity<Void> deleteCategory(@PathParam(value = "id") Long id){
+	public ResponseEntity<Void> deleteCategory(@Valid @PathVariable Long id){
 		
 		if(id != null) {
 			categoryService.deleteCategory(id);
@@ -91,7 +92,7 @@ public class CategoryController {
 	
 	@PutMapping("/category/{id}")
 	@Operation(summary= "Atualiza uma categoria pelo ID")
-	public ResponseEntity<Void> updateCategory(@PathParam(value = "id") Long id, @RequestBody Category category){
+	public ResponseEntity<Void> updateCategory(@PathVariable Long id, @RequestBody Category category){
 		
 		if(id != null && category != null) {
 			categoryService.updateCategory(id, category);

@@ -7,10 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -59,7 +59,7 @@ public class CommentController {
 	
 	@GetMapping("/comment/{id}")
 	@Operation(summary= "Retorna um comentário pelo id")
-	public ResponseEntity<EntityModel<Comment>> getComment(@PathParam(value="id") Long id){
+	public ResponseEntity<EntityModel<Comment>> getComment(@PathVariable Long id){
 		
 		Comment comment = commentService.findOne(id).orElseThrow(() -> new CommentNotFoundException(id));
 		
@@ -92,7 +92,7 @@ public class CommentController {
 	
 	@PutMapping("/comment/{id}")
 	@Operation(summary= "Atualiza um comentário pelo ID")
-	public ResponseEntity<Void> updateComment(@PathParam(value = "id") Long id, @RequestBody Comment comment){
+	public ResponseEntity<Void> updateComment(@PathVariable Long id, @RequestBody Comment comment){
 		
 		if(id != null && comment != null) {
 			commentService.updateComment(id, comment);

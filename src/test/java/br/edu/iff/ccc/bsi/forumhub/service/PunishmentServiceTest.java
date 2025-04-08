@@ -52,7 +52,7 @@ public class PunishmentServiceTest {
 	@Test
 	@DisplayName("Busca por Id em Punishment com sucesso.")
 	public void testFindOne() {
-		Punishment mockedPunishment = new Punishment(1L, "1234", Duration.ofDays(7));
+		Punishment mockedPunishment = new Punishment(1L, "1234", "7 days");
 		when(punishmentRepository.findById(1L)).thenReturn(Optional.of(mockedPunishment));
 
 		Punishment result = punishmentService.findOne(1L)
@@ -67,7 +67,7 @@ public class PunishmentServiceTest {
 	@Test
 	@DisplayName("Salva uma punição com sucesso.")
 	public void postPunishment() {
-		Punishment mockedPunishment = new Punishment(1L, "1234", Duration.ofDays(7));
+		Punishment mockedPunishment = new Punishment(1L, "1234", "7 days");
 		when(punishmentRepository.save(mockedPunishment)).thenReturn(mockedPunishment);
 
 		punishmentService.postPunishment(mockedPunishment);
@@ -79,7 +79,7 @@ public class PunishmentServiceTest {
 	@Test
 	@DisplayName("Deleta uma punição com sucesso.")
 	public void testDeletePunishment() {
-		Punishment mockedPunishment = new Punishment(1L, "1234", Duration.ofDays(7));
+		Punishment mockedPunishment = new Punishment(1L, "1234", "7 days");
 		punishmentService.deletePunishment(mockedPunishment.getId());
 		verify(punishmentRepository).deleteById(mockedPunishment.getId());
 	}
@@ -88,8 +88,8 @@ public class PunishmentServiceTest {
 	@DisplayName("Atualiza uma punição com sucesso.")
 	public void testUpdatePunishment() {
 	    
-		Punishment existingPunishment = new Punishment(1L, "1234", Duration.ofDays(7));
-		Punishment updatedPunishment = new Punishment(1L, "1234", Duration.ofDays(7));
+		Punishment existingPunishment = new Punishment(1L, "1234", "7 days");
+		Punishment updatedPunishment = new Punishment(1L, "1234", "7 days");
 		when(punishmentRepository.save(existingPunishment)).thenReturn(updatedPunishment);
 		when(punishmentRepository.findById(1L)).thenReturn(Optional.of(existingPunishment));
 		

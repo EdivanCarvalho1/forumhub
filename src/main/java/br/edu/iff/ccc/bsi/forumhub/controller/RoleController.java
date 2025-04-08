@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,7 +24,6 @@ import br.edu.iff.ccc.bsi.forumhub.model.Role;
 import br.edu.iff.ccc.bsi.forumhub.service.RoleService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.websocket.server.PathParam;
 
 @RestController
 @RequestMapping("api/v1")
@@ -52,7 +52,7 @@ public class RoleController {
 
 	@GetMapping("/role/{id}")
 	@Operation(summary = "Retorna uma pessoa pelo ID")
-	public ResponseEntity<EntityModel<Role>> getRole(@PathParam(value = "id") Long id) {
+	public ResponseEntity<EntityModel<Role>> getRole(@PathVariable Long id) {
 
 		Role role = roleService.findOne(id).orElseThrow(() -> new RoleNotFoundException("Role não encontrada!"));
 		
@@ -74,7 +74,7 @@ public class RoleController {
 
 	@DeleteMapping("/role/{id}")
 	@Operation(summary = "Deleta uma pessoa pelo ID")
-	public ResponseEntity<Void> deleteRole(@PathParam(value = "id") Long id) {
+	public ResponseEntity<Void> deleteRole(@PathVariable Long id) {
 
 		if (id != null) {
 			roleService.deleteRole(id);
@@ -85,7 +85,7 @@ public class RoleController {
 
 	@PutMapping("/role/{id}")
 	@Operation(summary = "Atualiza uma pessoa pelo ID")
-	public ResponseEntity<Void> updateRole(@PathParam(value = "id") Long id, @RequestBody Role role) {
+	public ResponseEntity<Void> updateRole(@PathVariable Long id, @RequestBody Role role) {
 
 		if (id != null && role != null) {
 			roleService.updateRole(id, role);
