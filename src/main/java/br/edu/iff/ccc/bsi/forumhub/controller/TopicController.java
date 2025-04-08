@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,7 +24,6 @@ import br.edu.iff.ccc.bsi.forumhub.model.Topic;
 import br.edu.iff.ccc.bsi.forumhub.service.TopicService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.websocket.server.PathParam;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -52,7 +52,7 @@ public class TopicController {
 	
 	@GetMapping("/topic/{id}")
 	@Operation(summary= "Retorna um tópico específico")
-	public ResponseEntity<EntityModel<Topic>> getTopic(@PathParam(value="id") Long id){
+	public ResponseEntity<EntityModel<Topic>> getTopic(@PathVariable Long id){
 		
 		Topic topic = topicService.findOne(id).orElseThrow(() -> new TopicNotFoundException("Tópico não encontrado!"));
 		
@@ -73,7 +73,7 @@ public class TopicController {
 	
 	@DeleteMapping("/topic/{id}")
 	@Operation(summary= "Deleta uma tópico pelo ID")
-	public ResponseEntity<Void> deleteTopic(@PathParam(value = "id") Long id){
+	public ResponseEntity<Void> deleteTopic(@PathVariable Long id){
 		
 		if(id != null) {
 			topicService.deleteTopic(id);
@@ -84,7 +84,7 @@ public class TopicController {
 	
 	@PutMapping("/topic/{id}")
 	@Operation(summary= "Atualiza um tópico pelo ID")
-	public ResponseEntity<Void> updateTopic(@PathParam(value = "id") Long id, @RequestBody Topic topic){
+	public ResponseEntity<Void> updateTopic(@PathVariable Long id, @RequestBody Topic topic){
 		
 		if(id != null && topic != null) {
 			topicService.updateTopic(id, topic);

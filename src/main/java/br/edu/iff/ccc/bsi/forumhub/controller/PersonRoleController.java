@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,7 +25,6 @@ import br.edu.iff.ccc.bsi.forumhub.model.PersonRole;
 import br.edu.iff.ccc.bsi.forumhub.service.PersonRoleService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.websocket.server.PathParam;
 
 @RestController
 @RequestMapping("api/v1")
@@ -57,7 +57,7 @@ public class PersonRoleController {
 	
 	@GetMapping("/personrole/{id}")
 	@Operation(summary= "Retorna uma role de pessoa pelo ID")
-	public ResponseEntity<EntityModel<PersonRole>> getPersonRole(@PathParam(value="id") Long id){
+	public ResponseEntity<EntityModel<PersonRole>> getPersonRole(@PathVariable Long id){
 		
 		PersonRole personrole = personRoleService.findOne(id).orElseThrow(() -> new PersonRoleNotFoundException("Role de usuário não encontrada!"));
 		
@@ -80,7 +80,7 @@ public class PersonRoleController {
 	
 	@DeleteMapping("/personrole/{id}")
 	@Operation(summary= "Deleta uma role de pessoa pelo ID")
-	public ResponseEntity<Void> deletePersonRole(@PathParam(value = "id") Long id){
+	public ResponseEntity<Void> deletePersonRole(@PathVariable Long id){
 		
 		if(id != null) {
 			personRoleService.deletePersonRole(id);
@@ -91,7 +91,7 @@ public class PersonRoleController {
 	
 	@PutMapping("/personrole/{id}")
 	@Operation(summary= "Atualiza uma role de pessoa pelo ID")
-	public ResponseEntity<Void> updatePersonRole(@PathParam(value = "id") Long id, @RequestBody PersonRole personRole){
+	public ResponseEntity<Void> updatePersonRole(@PathVariable Long id, @RequestBody PersonRole personRole){
 		
 		if(id != null && personRole != null) {
 			personRoleService.updatePersonRole(id, personRole);

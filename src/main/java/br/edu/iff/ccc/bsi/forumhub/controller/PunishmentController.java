@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -52,13 +53,14 @@ public class PunishmentController {
 	
 	@GetMapping("/punishment/{id}")
 	@Operation(summary= "Retorna um tipo punição pelo ID")
-	public ResponseEntity<EntityModel<Punishment>> getPunishment(@PathParam(value="id") Long id){
+	public ResponseEntity<EntityModel<Punishment>> getPunishment(@PathVariable Long id){
 		
 		Punishment punishment = punishmentService.findOne(id).orElseThrow(() -> new PunishmentNotFoundException("Punição não encontrada!"));
 		
 		EntityModel<Punishment> punishmentModel = assembler.toModel(punishment);
 		
 		return ResponseEntity.status(HttpStatus.ACCEPTED).body(punishmentModel);
+		
 	}
 	@PostMapping("/punishment")
 	@Operation(summary= "Cria um tipo punição")
@@ -73,7 +75,7 @@ public class PunishmentController {
 	
 	@DeleteMapping("/punishment/{id}")
 	@Operation(summary= "Deleta um tipo de punição pelo ID")
-	public ResponseEntity<Void> deletePunishment(@PathParam(value="id") Long id){
+	public ResponseEntity<Void> deletePunishment(@PathVariable Long id){
 		
 		if(id != null) {
 			punishmentService.deletePunishment(id);
@@ -84,7 +86,7 @@ public class PunishmentController {
 	
 	@PutMapping("/punishment/{id}")
 	@Operation(summary= "Atualiza um tipo de punição pelo ID")
-	public ResponseEntity<Void> updatePunishment(@PathParam(value = "id") Long id, @RequestBody Punishment punishment){
+	public ResponseEntity<Void> updatePunishment(@PathVariable Long id, @RequestBody Punishment punishment){
 		
 		if(id != null && punishment != null) {
 			punishmentService.updatePunishment(id, punishment);
