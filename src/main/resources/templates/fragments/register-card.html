@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+	<link th:href="@{/css/register.css}" rel="stylesheet" />
+</head>
+
+<body>
+	<div th:fragment="register-card">
+		<div class="container">
+			<div class="register-card">
+				<header class="register-header">
+					<h1>Registrar-se</h1>
+				</header>
+				<div class="register-card-content">
+					<label for="username">Usuário:</label>
+					<div class="input-container">
+						<input class="register-input" type="text" id="username" placeholder="Nome de Usuário" required>
+					</div>
+					<label for="email">Email:</label>
+					<div class="input-container">
+						<input class="register-input" type="email" id="email" placeholder="Email" required>
+					</div>
+					<label for="phone">Telefone:</label>
+					<div class="input-container">
+						<input class="register-input" type="tel" id="phone" placeholder="Telefone" required>
+					</div>
+
+					<label for="password">Senha:</label>
+					<div class="input-container">
+						<input class="register-input" type="password" id="password" placeholder="Senha" required>
+					</div>
+					<button type="submit" class="register-button">Registrar-se</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+
+</html>

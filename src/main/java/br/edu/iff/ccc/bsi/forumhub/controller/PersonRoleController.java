@@ -18,85 +18,78 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.edu.iff.ccc.bsi.forumhub.assembler.PersonRoleModel;
 import br.edu.iff.ccc.bsi.forumhub.exception.EmptyListException;
-import br.edu.iff.ccc.bsi.forumhub.exception.InvalidPersonRoleException;
-import br.edu.iff.ccc.bsi.forumhub.exception.PersonRoleNotFoundException;
+import br.edu.iff.ccc.bsi.forumhub.exception.NotFoundException;
 import br.edu.iff.ccc.bsi.forumhub.model.PersonRole;
 import br.edu.iff.ccc.bsi.forumhub.service.PersonRoleService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import jakarta.websocket.server.PathParam;
 
 @RestController
 @RequestMapping("api/v1")
-@Tag(name = "Person Role", description= "Operações relacionadas a roles de pessoas")
+@Tag(name = "Person Role", description = "Operações relacionadas a roles de pessoas")
 public class PersonRoleController {
-	
+
 	@Autowired
 	private PersonRoleService personRoleService;
-	
+
 	@Autowired
 	private PersonRoleModel assembler;
-	
+
 	@GetMapping("/personrole")
-	@Operation(summary= "Retorna todas as roles de pessoas")
-	public ResponseEntity<CollectionModel<EntityModel<PersonRole>>> getPersonRoles(){
-		
+	@Operation(summary = "Retorna todas as roles de pessoas")
+	public ResponseEntity<CollectionModel<EntityModel<PersonRole>>> getPersonRoles() {
+
 		List<EntityModel<PersonRole>> personRoleList = personRoleService.findAll()
-				.orElseThrow(() -> new PersonRoleNotFoundException("Nenhuma role de usuário cadastrada!"))
-				.stream()
-				.map(assembler::toModel)
-				.collect(Collectors.toList());
-		
+				.orElseThrow(() -> new NotFoundException("Nenhuma role de usuário cadastrada!")).stream()
+				.map(assembler::toModel).collect(Collectors.toList());
+
 		if (personRoleList.isEmpty()) {
 			throw new EmptyListException();
 		}
-		
+
 		return ResponseEntity.status(HttpStatus.ACCEPTED).body(CollectionModel.of(personRoleList));
-		
+
 	}
-	
+
 	@GetMapping("/personrole/{id}")
-	@Operation(summary= "Retorna uma role de pessoa pelo ID")
-	public ResponseEntity<EntityModel<PersonRole>> getPersonRole(@PathParam(value="id") Long id){
-		
-		PersonRole personrole = personRoleService.findOne(id).orElseThrow(() -> new PersonRoleNotFoundException("Role de usuário não encontrada!"));
-		
+	@Operation(summary = "Retorna uma role de pessoa pelo ID")
+	public ResponseEntity<EntityModel<PersonRole>> getPersonRole(@Valid @PathParam(value = "id") Long id) {
+
+		PersonRole personrole = personRoleService.findOne(id)
+				.orElseThrow(() -> new NotFoundException("Role de usuário não encontrada!"));
+
 		EntityModel<PersonRole> personRoleModel = assembler.toModel(personrole);
-		
+
 		return ResponseEntity.status(HttpStatus.ACCEPTED).body(personRoleModel);
 	}
-	
-	
+
 	@PostMapping("/personrole")
-	@Operation(summary= "Cria uma role de pessoa")
-	public ResponseEntity<Void> postPersonRole(@RequestBody PersonRole personRole){
-		
-		if(personRole != null) {
-			personRoleService.postPersonRole(personRole);
-			return ResponseEntity.status(HttpStatus.CREATED).build();
-		}
-		throw new InvalidPersonRoleException("Role de usuário inválida!");
+	@Operation(summary = "Cria uma role de pessoa")
+	public ResponseEntity<Void> postPersonRole(@Valid @RequestBody PersonRole personRole) {
+
+		personRoleService.postPersonRole(personRole);
+		return ResponseEntity.status(HttpStatus.CREATED).build();
+
 	}
-	
+
 	@DeleteMapping("/personrole/{id}")
-	@Operation(summary= "Deleta uma role de pessoa pelo ID")
-	public ResponseEntity<Void> deletePersonRole(@PathParam(value = "id") Long id){
-		
-		if(id != null) {
-			personRoleService.deletePersonRole(id);
-			return ResponseEntity.status(HttpStatus.ACCEPTED).build();
-		}
-		throw new InvalidPersonRoleException("Role de usuário inválida!");
+	@Operation(summary = "Deleta uma role de pessoa pelo ID")
+	public ResponseEntity<Void> deletePersonRole(@Valid @PathParam(value = "id") Long id) {
+
+		personRoleService.deletePersonRole(id);
+		return ResponseEntity.status(HttpStatus.ACCEPTED).build();
+
 	}
-	
+
 	@PutMapping("/personrole/{id}")
-	@Operation(summary= "Atualiza uma role de pessoa pelo ID")
-	public ResponseEntity<Void> updatePersonRole(@PathParam(value = "id") Long id, @RequestBody PersonRole personRole){
-		
-		if(id != null && personRole != null) {
-			personRoleService.updatePersonRole(id, personRole);
-			return ResponseEntity.status(HttpStatus.ACCEPTED).build();
-		}
-		throw new InvalidPersonRoleException("Role de usuário inválida!");
+	@Operation(summary = "Atualiza uma role de pessoa pelo ID")
+	public ResponseEntity<Void> updatePersonRole(@Valid @PathParam(value = "id") Long id,
+			@RequestBody PersonRole personRole) {
+
+		personRoleService.updatePersonRole(id, personRole);
+		return ResponseEntity.status(HttpStatus.ACCEPTED).build();
+
 	}
 }

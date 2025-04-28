@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+	<link th:href="@{/css/login.css}" rel="stylesheet" />
+</head>
+
+<body>
+	<div th:fragment="login">
+		<div class="container">
+			<div class="login-card">
+				<header class="login-header">
+					<h1>Login</h1>
+				</header>
+				<div class="login-card-content">
+					<label for="username">Usuário:</label>
+					<div class="input-container">
+						<input class="login-input" type="text" id="username" placeholder="Email" required>
+					</div>
+					<label for="password">Senha:</label>
+					<div class="input-container">
+						<input class="login-input" type="password" id="password" placeholder="Senha" required>
+					</div>
+					<button type="submit" class="login-button">Entrar</button>
+					<div class="option-container">
+						<a class="forgot-password" href="#">Esqueci minha senha</a>
+						<a class="register" th:href="@{/register}">Registrar</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+
+</html>

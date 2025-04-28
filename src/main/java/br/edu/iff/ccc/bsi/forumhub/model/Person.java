@@ -5,12 +5,9 @@ import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-import br.edu.iff.ccc.bsi.forumhub.enums.STATUS;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -77,9 +74,8 @@ public class Person implements Serializable {
 	@Column(name="status", nullable = false)
 	@NotNull
 	@NotEmpty
-	@Enumerated(EnumType.STRING)
 	@Schema(description = "Person status", example = "ACTIVE")
-	private STATUS status;
+	private String status;
 	
 	@Column(name="person_points", nullable = false)
 	@NotNull

@@ -19,7 +19,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import br.edu.iff.ccc.bsi.forumhub.enums.STATUS;
 import br.edu.iff.ccc.bsi.forumhub.model.Person;
 import br.edu.iff.ccc.bsi.forumhub.repository.PersonRepository;
 
@@ -41,7 +40,7 @@ public class PersonServiceTest {
 	@DisplayName("Busca todas as pessoas com sucesso.")
 	public void testFindAll() {
 		List<Person> mockedPerson = List.of(new Person(1L, "Edivan", "123456789", "123", "edivan@email.com",
-				LocalDateTime.now(), STATUS.ACTIVE, 1));
+				LocalDateTime.now(), "ACTIVE", 1));
 		when(personRepository.findAll()).thenReturn(mockedPerson);
 
 		List<Person> result = personService.findAll()
@@ -56,7 +55,7 @@ public class PersonServiceTest {
 	@DisplayName("Busca por Id em Person com sucesso.")
 	public void testFindOne() {
 		Person mockedPerson = new Person(1L, "Edivan", "123456789", "123", "edivan@email.com", LocalDateTime.now(),
-				STATUS.ACTIVE, 1);
+				"ACTIVE", 1);
 		when(personRepository.findById(1L)).thenReturn(Optional.of(mockedPerson));
 
 		Person result = personService.findOne(1L).orElseThrow(() -> new RuntimeException("Usuário não encontrado!"));
@@ -71,7 +70,7 @@ public class PersonServiceTest {
 	@DisplayName("Busca por Id em Person com sucesso.")
 	public void testFindByNickName() {
 		Person mockedPerson = new Person(1L, "Edivan", "123456789", "123", "edivan@email.com", LocalDateTime.now(),
-				STATUS.ACTIVE, 1);
+				"ACTIVE", 1);
 		when(personRepository.findByNickname("Edivan")).thenReturn(Optional.of(mockedPerson));
 
 		Person result = personService.findByNickname("Edivan")
@@ -88,7 +87,7 @@ public class PersonServiceTest {
 	public void testFindByNicknameAndPhone() {
 
 		List<Person> mockedPerson = List.of(new Person(1L, "Edivan", "123456789", "123", "edivan@email.com",
-				LocalDateTime.now(), STATUS.ACTIVE, 1));
+				LocalDateTime.now(), "ACTIVE", 1));
 
 		when(personRepository.findByNicknameAndPhone("Edivan", "123")).thenReturn(Optional.of(mockedPerson));
 
@@ -106,7 +105,7 @@ public class PersonServiceTest {
 	@DisplayName("Cria pessoa com sucesso.")
 	public void testPostPerson() {
 		Person mockedPerson = new Person(1L, "Edivan", "123456789", "123", "edivan@email.com", LocalDateTime.now(),
-				STATUS.ACTIVE, 1);
+				"ACTIVE", 1);
 		
 		personService.postPerson(mockedPerson);
 
@@ -126,9 +125,9 @@ public class PersonServiceTest {
 	@DisplayName("Atualiza uma pessoa com sucesso.")
 	public void testUpdatePerson() {
 		Person existingPerson = new Person(1L, "Edivan", "123456789", "123", "edivan@email.com", LocalDateTime.now(),
-				STATUS.ACTIVE, 1);
+				"ACTIVE", 1);
 		Person updatedPerson = new Person(1L, "Edivan", "123456789", "123", "123@email.com", LocalDateTime.now(),
-				STATUS.ACTIVE, 1);
+				"ACTIVE", 1);
 
 		when(personRepository.findById(1L)).thenReturn(Optional.of(existingPerson));
 		when(personRepository.save(existingPerson)).thenReturn(existingPerson);

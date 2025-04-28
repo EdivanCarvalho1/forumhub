@@ -50,5 +50,5 @@ public class Punishment implements Serializable {
 	@NotNull
 	@Future
 	@Schema(description = "Punishment period", example = "PT1H")
-	private Duration periodo;
+	private String periodo;
 }

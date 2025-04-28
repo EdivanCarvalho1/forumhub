@@ -1,0 +1,42 @@
+.container {
+	margin-top: 6rem;
+	display: flex;
+	flex-direction: row;
+}
+
+.topics-card {
+	width: 84rem;
+	height: 40rem;
+	background-color: white;
+	margin-left: 3rem;
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+}
+
+.card-header {
+	background-color: #2c54a9;
+	color: white;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	flex-direction: row;
+	padding: 0.7rem;
+}
+
+.card-content {
+	min-height: 80%;
+	padding: 0.7rem;
+}
+
+.card-title {
+	color: white;
+}
+.recents-card{
+	width: 28rem;
+	background-color: white;
+	color:white;
+	min-height: 80%;
+	height: 40rem;
+	margin-left: 3rem;
+}

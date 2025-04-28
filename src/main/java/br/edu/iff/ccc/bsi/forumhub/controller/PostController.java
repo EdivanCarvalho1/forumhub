@@ -18,12 +18,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.edu.iff.ccc.bsi.forumhub.assembler.PostModel;
 import br.edu.iff.ccc.bsi.forumhub.exception.EmptyListException;
-import br.edu.iff.ccc.bsi.forumhub.exception.InvalidPostException;
-import br.edu.iff.ccc.bsi.forumhub.exception.PostNotFoundException;
+import br.edu.iff.ccc.bsi.forumhub.exception.NotFoundException;
 import br.edu.iff.ccc.bsi.forumhub.model.Post;
 import br.edu.iff.ccc.bsi.forumhub.service.PostService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import jakarta.websocket.server.PathParam;
 
 @RestController
@@ -38,64 +38,54 @@ public class PostController {
 	private PostModel assembler;
 
 	@GetMapping("/post")
-	@Operation(summary= "Retorna todos os posts")
-	public ResponseEntity<CollectionModel<EntityModel<Post>>> getPosts(){
-		
+	@Operation(summary = "Retorna todos os posts")
+	public ResponseEntity<CollectionModel<EntityModel<Post>>> getPosts() {
+
 		List<EntityModel<Post>> postList = postService.findAll()
-				.orElseThrow(() -> new PostNotFoundException("Nenhum post cadastrado"))
-				.stream()
-				.map(assembler::toModel)
-                .collect(Collectors.toList());
-        
-        if (postList.isEmpty()) {
-        	throw new EmptyListException("Nenhum post cadastrado");
-        }
-		
+				.orElseThrow(() -> new NotFoundException("Nenhum post cadastrado")).stream().map(assembler::toModel)
+				.collect(Collectors.toList());
+
+		if (postList.isEmpty()) {
+			throw new EmptyListException("Nenhum post cadastrado");
+		}
+
 		return ResponseEntity.ok().body(CollectionModel.of(postList));
-		
+
 	}
 
 	@GetMapping("/post/{id}")
 	@Operation(summary = "Retorna um post pelo ID")
-	public ResponseEntity<EntityModel<Post>> getPost(@PathParam(value = "id") Long id) {
+	public ResponseEntity<EntityModel<Post>> getPost(@Valid @PathParam(value = "id") Long id) {
 
-		Post post = postService.findOne(id).orElseThrow(() -> new PostNotFoundException("Post não encontrado!"));
-		
+		Post post = postService.findOne(id).orElseThrow(() -> new NotFoundException("Post não encontrado!"));
+
 		EntityModel<Post> postModel = assembler.toModel(post);
-		
+
 		return ResponseEntity.status(HttpStatus.ACCEPTED).body(postModel);
 	}
 
 	@PostMapping("/post")
 	@Operation(summary = "Cria um post")
-	public ResponseEntity<Void> postPost(@RequestBody Post post) {
+	public ResponseEntity<Void> postPost(@Valid @RequestBody Post post) {
+		postService.postPost(post);
+		return ResponseEntity.status(HttpStatus.CREATED).build();
 
-		if (post != null) {
-			postService.postPost(post);
-			return ResponseEntity.status(HttpStatus.CREATED).build();
-		}
-		throw new InvalidPostException("Post inválido");
 	}
 
 	@DeleteMapping("/post/{id}")
 	@Operation(summary = "Deleta um post pelo ID")
-	public ResponseEntity<Void> deletePost(@PathParam(value = "id") Long id) {
+	public ResponseEntity<Void> deletePost(@Valid @PathParam(value = "id") Long id) {
 
-		if (id != null) {
-			postService.deletePost(id);
-			return ResponseEntity.status(HttpStatus.ACCEPTED).build();
-		}
-		throw new PostNotFoundException("Post não encontrado");
+		postService.deletePost(id);
+		return ResponseEntity.status(HttpStatus.ACCEPTED).build();
+
 	}
 
 	@PutMapping("/post/{id}")
 	@Operation(summary = "Atualiza um post pelo ID")
-	public ResponseEntity<Void> updatePost(@PathParam(value = "id") Long id, @RequestBody Post post) {
+	public ResponseEntity<Void> updatePost(@Valid @PathParam(value = "id") Long id, @RequestBody Post post) {
+		postService.updatePost(id, post);
+		return ResponseEntity.status(HttpStatus.ACCEPTED).build();
 
-		if (id != null && post != null) {
-			postService.updatePost(id, post);
-			return ResponseEntity.status(HttpStatus.ACCEPTED).build();
-		}
-		throw new PostNotFoundException("Post não encontrado");
 	}
 }
