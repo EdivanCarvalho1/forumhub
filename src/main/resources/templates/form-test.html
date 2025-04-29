@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="/icon/forum-azul.svg" type="image/svg+xml">
+    <title>Form Test</title>
+</head>
+<body>
+    <form id="form" th:action="@{/role}" th:object="${role}" method="POST">
+        <input type="text" id="rolename" th:field="*{roleName}" placeholder="Nome da Role">
+        <input type="text" id="description" th:field="*{description}" placeholder="Descrição">
+        <button type="submit">Enviar</button>
+    </form>
+    <div th:if="${message}">
+        <p th:text="${message}"></p>
+    </div>
+</body>
+</html>

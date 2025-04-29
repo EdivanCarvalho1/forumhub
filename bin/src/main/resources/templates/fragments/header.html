@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+	<link th:href="@{/css/head.css}" rel="stylesheet" />
+</head>
+
+<body>
+	<div th:fragment="header">
+		<header class="site-header">
+			<div>
+					<img src="/icon/forum.svg" alt="bate-papo" class="forum-icon">
+					<h1 class="title">ForumHub</h1>
+			</div>
+			<div>
+				<div class="input-background">
+					<input type="text" class="input-search">
+				</div>
+				<img src="/icon/lupa.svg" alt="lupa" class="lupa">
+				<a th:href="@{/login}" class="login-link">Login/Registrar</a>
+			</div>
+		</header>
+	</div>
+</body>
+
+</html>

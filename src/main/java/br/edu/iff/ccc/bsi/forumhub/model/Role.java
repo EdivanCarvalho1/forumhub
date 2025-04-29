@@ -28,6 +28,7 @@ public class Role {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Schema(description = "Role ID", example = "1")
+	@Column(name = "id_role", nullable = false)
 	private Long id;
 	
 	@Column(name = "role_name", nullable = false)
@@ -41,5 +42,4 @@ public class Role {
 	@NotEmpty
 	@Schema(description = "Role description", example = "Administrator")
 	private String description;
-	
 }

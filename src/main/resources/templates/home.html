@@ -4,14 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="icon" href="/icon/forum-azul.svg" type="image/svg+xml">
-    <title>Página de Teste</title>
+    <title>Home</title>
     <link th:href="@{/css/global.css}" rel="stylesheet"/>
 	<link th:href="@{/css/topics.css}" rel="stylesheet"/>
 	<link th:href="@{/css/head.css}" rel="stylesheet"/>
+	<link th:href="@{/css/footer.css}" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <div th:insert="~{fragments/header :: header}" ></div>
 	<div th:insert="~{fragments/topics :: topics}" ></div>
+	<div th:insert="~{fragments/footer :: footer}" ></div>
 </body>
 </html>
