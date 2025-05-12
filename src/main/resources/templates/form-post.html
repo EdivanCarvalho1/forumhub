@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Criar Post</title>
+	<link th:href="@{/css/global.css}" rel="stylesheet" />
+	<link rel="icon" href="/icon/forum-azul.svg" type="image/svg+xml">
+	<link th:href="@{/css/head.css}" rel="stylesheet" />
+	<link th:href="@{/css/footer.css}" rel="stylesheet" />
+	<link th:href="@{/css/postar.css}" rel="stylesheet" />
+	<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+	<script src="http://localhost:35729/livereload.js"></script>
+</head>
+
+<body>
+	<div th:insert="~{fragments/header :: header}" ></div>
+	<div th:insert="~{fragments/post-card :: post-card}" ></div>
+	<div th:insert="~{fragments/footer :: footer}" ></div>
+</body>
+
+</html>

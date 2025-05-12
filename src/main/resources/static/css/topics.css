@@ -11,7 +11,7 @@
 	margin-left: 3rem;
 	display: flex;
 	flex-direction: column;
-	overflow: hidden;
+	overflow: auto;
 	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
@@ -33,12 +33,47 @@
 .card-title {
 	color: white;
 }
-.recents-card{
+
+.recents-card {
 	width: 28rem;
 	background-color: white;
-	color:white;
+	color: white;
 	min-height: 80%;
 	height: 40rem;
 	margin-left: 3rem;
 	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+	overflow: auto;
+}
+
+.post-item {
+	width: 90%;
+	display: flex;
+	flex-direction: column;
+	padding: 1rem;
+	margin: 1rem;
+	border: 1px solid #e0e0e0;
+	border-radius: 8px;
+	background-color: #f9f9f9;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.post-item h1 {
+	margin: 0 0 0.5rem;
+	font-size: 1.25rem;
+	color: #1a1a1a;
+}
+
+.post-item p {
+	margin: 0.25rem 0;
+	color: #444;
+	font-size: 1rem;
+	line-height: 1.4;
+}
+
+.post-item .post-owner {
+	align-self: flex-end;
+	font-size: 0.85rem;
+	color: #2c54a9;
+	font-style: italic;
+	margin-top: 0.5rem;
 }

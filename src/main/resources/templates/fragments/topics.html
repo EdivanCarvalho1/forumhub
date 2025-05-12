@@ -11,17 +11,28 @@
 			<div class="topics-card">
 				<header class="card-header">
 					<h2 class="card-title">Tópicos</h2>
-					
+
 					<p>Categorias</p>
 				</header>
 				<div class="card-content">
-					<p th:each="post : ${posts}" th:text="${post.content}"></p>
+					<div th:each="post : ${posts}" class="post-item">
+						<h1 th:text="${post.topic.title}"></h1>
+						<p th:text="${post.content}"></p>
+						<p th:text="${post.person.nickname}" class="post-owner"></p>
+						<p th:text="${#temporals.format(post.creationDate, 'dd-MM-yyyy HH:mm')}"></p>
+					</div>
 				</div>
 			</div>
 			<div class="recents-card">
 				<header class="card-header">
 					<h2 class="card-title">Mais Recentes</h2>
-					<div></div>
+				</header>
+				<div th:each="post : ${posts}" class="post-item">
+					<h1 th:text="${post.topic.title}"></h1>
+					<p th:text="${post.content}"></p>
+					<p th:text="${post.person.nickname}" class="post-owner"></p>
+					<p th:text="${#temporals.format(post.creationDate, 'dd-MM-yyyy HH:mm')}"></p>
+				</div>
 			</div>
 		</div>
 	</div>

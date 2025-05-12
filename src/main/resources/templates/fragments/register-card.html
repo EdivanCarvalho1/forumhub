@@ -1,40 +1,49 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-	<link th:href="@{/css/register.css}" rel="stylesheet" />
+    <link th:href="@{/css/register.css}" rel="stylesheet" />
 </head>
 
 <body>
-	<div th:fragment="register-card">
-		<div class="container">
-			<div class="register-card">
-				<header class="register-header">
-					<h1>Registrar-se</h1>
-				</header>
-				<div class="register-card-content">
-					<label for="username">Usuário:</label>
-					<div class="input-container">
-						<input class="register-input" type="text" id="username" placeholder="Nome de Usuário" required>
-					</div>
-					<label for="email">Email:</label>
-					<div class="input-container">
-						<input class="register-input" type="email" id="email" placeholder="Email" required>
-					</div>
-					<label for="phone">Telefone:</label>
-					<div class="input-container">
-						<input class="register-input" type="tel" id="phone" placeholder="Telefone" required>
-					</div>
+    <div th:fragment="register-card">
+        <div class="container">
+            <div class="register-card">
+                <header class="register-header">
+                    <h1>Registrar-se</h1>
+                </header>
+                <div class="register-card-content">
+                    <form th:action="@{/person}" th:object="${person}" method="post">
+                        <label for="nickname">Usuário:</label>
+                        <div class="input-container">
+                            <input class="register-input" type="text" id="nickname"
+                                   th:field="*{nickname}" placeholder="Nome de Usuário" required>
+                        </div>
 
-					<label for="password">Senha:</label>
-					<div class="input-container">
-						<input class="register-input" type="password" id="password" placeholder="Senha" required>
-					</div>
-					<button type="submit" class="register-button">Registrar-se</button>
-				</div>
-			</div>
-		</div>
-	</div>
+                        <label for="email">Email:</label>
+                        <div class="input-container">
+                            <input class="register-input" type="email" id="email"
+                                   th:field="*{email}" placeholder="Email" required>
+                        </div>
+
+                        <label for="phone">Telefone:</label>
+                        <div class="input-container">
+                            <input class="register-input" type="tel" id="phone"
+                                   th:field="*{phone}" placeholder="Telefone" required>
+                        </div>
+
+                        <label for="password">Senha:</label>
+                        <div class="input-container">
+                            <input class="register-input" type="password" id="password"
+                                   th:field="*{password}" placeholder="Senha" required>
+                        </div>
+                        <button type="submit" class="register-button">Registrar-se</button>
+                    </form>
+					<p th:if="${message}">Usuário Cadastrado com Sucesso!</p>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 
 </html>

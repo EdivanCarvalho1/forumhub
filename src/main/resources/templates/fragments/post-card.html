@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+</head>
+
+<body>
+	<div th:fragment="post-card">
+		<div class="container">
+			<div class="post-card">
+				<header class="post-header">
+					<h1>Criar Post</h1>
+				</header>
+				<form class="post-form" th:action="@{/postar}" th:object="${post}" method="post">
+					<input type="text" id="topic" class="topic" placeholder="Título do Post" th:field="*{title}" required>
+					<textarea class="content" th:field="*{content}"></textarea>
+					<button type="submit">Enviar</button>
+				</form>			
+			</div>
+		</div>
+</body>
+
+</html>

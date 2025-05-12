@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -65,10 +66,10 @@ public class Post implements Serializable{
 	@Schema(description = "Creation date", example = "2021-10-01T15:00:00")
 	private LocalDateTime creationDate;
 	
-	@ManyToOne
 	@JoinColumn(name = "id_person", nullable = false)
 	@NotNull
 	@Schema(description = "Person ID", example = "1")
+	@ManyToOne(cascade = CascadeType.PERSIST)
 	private Person person;
 	
 	@ManyToOne
