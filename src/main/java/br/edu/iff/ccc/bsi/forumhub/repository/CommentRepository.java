@@ -1,5 +1,6 @@
 package br.edu.iff.ccc.bsi.forumhub.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -11,4 +12,6 @@ import br.edu.iff.ccc.bsi.forumhub.model.Comment;
 public interface CommentRepository extends JpaRepository<Comment, Long> {
 	
 	public Optional<Comment> findByContent(String content);
+	
+	public Optional<List<Comment>> findByPostId(Long postId);
 }

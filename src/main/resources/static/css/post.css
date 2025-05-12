@@ -1,0 +1,135 @@
+.container {
+	height: 100vh;
+	display: flex;
+	justify-content: center;
+	width: 100%;
+	align-items: center;
+}
+
+.post-card {
+	background-color: white;
+	display: flex;
+	flex-direction: column;
+	width: 70rem;
+	height: 40rem;
+}
+
+.post-header {
+	color: white;
+	background-color: #2c54a9;
+	overflow: hidden;
+	padding: 0.5rem;
+}
+
+.content{
+	display: flex;
+	margin:1rem;
+	align-items: center;
+	width: 100%;
+}
+
+
+.content h1{
+	margin-left: 1rem;
+}
+
+.content p{
+	margin-left : 40rem;
+	margin-right: 1rem;
+}
+.user{
+	width: 4rem;
+	height: 4rem;
+}
+.comment{
+	margin:1rem;
+}
+.post-comments {
+	margin: 1rem;
+	max-height: 30rem; /* altura máxima da área de comentários */
+	overflow-y: auto;  /* rolagem vertical quando ultrapassar altura */
+	padding-right: 0.5rem; /* espaço pro scrollbar não colar no conteúdo */
+}
+
+.comment-card{
+	margin-top: 1rem;
+	display: flex;
+	align-items: center;
+}
+
+.comment-card h3{
+	margin-left: 1rem;
+	width: 100%;
+}
+
+.comment-content{
+	margin: 0.5rem;
+	margin-left: 5.5rem;
+}
+button{
+	background-color: red;	
+	color: white;
+	border: none;
+	padding: 0.5rem;
+	border-radius: 1rem;
+}
+.add-comment {
+	margin-top: 2rem;
+	padding: 1rem;
+	border-top: 1px solid #ccc;
+}
+
+.add-comment h2 {
+	font-size: 1.2rem;
+	margin-bottom: 0.5rem;
+}
+
+.comment-form {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+}
+
+.comment-form textarea {
+	width: 100%;
+	min-height: 80px;
+	resize: vertical;
+	padding: 0.5rem;
+	font-size: 1rem;
+	border: 1px solid #ccc;
+	border-radius: 5px;
+}
+
+.comment-form button {
+	align-self: flex-end;
+	background-color: #3498db;
+	color: white;
+	border: none;
+	padding: 0.5rem 1rem;
+	border-radius: 4px;
+	cursor: pointer;
+	transition: background-color 0.2s ease-in-out;
+}
+
+.comment-form button:hover {
+	background-color: #2980b9;
+}
+
+.post-comments::-webkit-scrollbar {
+	width: 6px;
+}
+
+.post-comments::-webkit-scrollbar-track {
+	background: #f1f1f1;
+	border-radius: 10px;
+}
+
+.post-comments::-webkit-scrollbar-thumb {
+	background: #ccc;
+	border-radius: 10px;
+}
+
+.post-comments::-webkit-scrollbar-thumb:hover {
+	background: #aaa;
+}
+

@@ -63,4 +63,11 @@ public class CommentService {
 
 		return Optional.ofNullable(comment);
 	}
+	
+	public Optional<List<Comment>> findByPostId(Long postId) {
+		List<Comment> comments = commentRepository.findByPostId(postId)
+				.orElseThrow(() -> new RuntimeException("Nenhum comentário encontrado para este post"));
+
+		return Optional.ofNullable(comments);
+	}
 }

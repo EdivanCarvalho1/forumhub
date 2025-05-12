@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+</head>
+
+<body>
+	<div th:fragment="post">
+		<div>
+			<div class="container">
+				<div class="post-card">
+					<header class="post-header">
+						<h1 th:text="${post.topic.title}"></h1>
+					</header>
+					<div class="content">
+						<img th:src="@{/icon/user.png}" alt="user icon" class="user">
+						<h1 th:text="${post.person.nickname}"></h1>
+						<p th:text="${post.creationDate}"></p>
+						<form th:action="@{/post/{id}(id=${post.id})}" method="post">
+							<input type="hidden" name="_method" value="delete" />
+							<button type="submit"
+								onclick="return confirm('Tem certeza que deseja deletar este post?');">
+								Deletar Post
+							</button>
+						</form>
+					</div>
+					<p th:if="${message}" th:text="${message}"></p>
+					<div class="comment">
+						<p th:text="${post.content}"></p>
+					</div>
+					<div class="post-comments">
+						<h1>Comentários</h1>
+						<div class="add-comment">
+							<h2>Adicionar Comentário</h2>
+							<form th:action="@{/comment/{id}(id=${post.id})}" method="post" class="comment-form">
+								<textarea name="content" placeholder="Escreva seu comentário..." required></textarea>
+								<button type="submit">Comentar</button>
+							</form>
+						</div>
+
+						<div th:if="${comments}">
+							<div th:each="comment : ${comments}">
+								<div class="comment-card">
+									<img th:src="@{/icon/user.png}" alt="user icon" class="user">
+									<h3 th:text="${comment.person.nickname}"></h3>
+								</div>
+								<div class="comment-content">
+									<p th:text="${comment.content}"></p>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+
+</html>

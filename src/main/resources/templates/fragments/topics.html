@@ -16,10 +16,12 @@
 				</header>
 				<div class="card-content">
 					<div th:each="post : ${posts}" class="post-item">
-						<h1 th:text="${post.topic.title}"></h1>
-						<p th:text="${post.content}"></p>
-						<p th:text="${post.person.nickname}" class="post-owner"></p>
-						<p th:text="${#temporals.format(post.creationDate, 'dd-MM-yyyy HH:mm')}"></p>
+						<a th:href="@{/post/{id}(id=${post.id})}">
+							<h1 th:text="${post.topic.title}"></h1>
+							<p th:text="${post.content}"></p>
+							<p th:text="${post.person.nickname}" class="post-owner"></p>
+							<p th:text="${#temporals.format(post.creationDate, 'dd-MM-yyyy HH:mm')}"></p>
+						</a>
 					</div>
 				</div>
 			</div>
@@ -28,10 +30,12 @@
 					<h2 class="card-title">Mais Recentes</h2>
 				</header>
 				<div th:each="post : ${posts}" class="post-item">
-					<h1 th:text="${post.topic.title}"></h1>
-					<p th:text="${post.content}"></p>
-					<p th:text="${post.person.nickname}" class="post-owner"></p>
-					<p th:text="${#temporals.format(post.creationDate, 'dd-MM-yyyy HH:mm')}"></p>
+					<a th:href="@{/post/{id}(id=${post.id})}">
+						<h1 th:text="${post.topic.title}"></h1>
+						<p th:text="${post.content}"></p>
+						<p th:text="${post.person.nickname}" class="post-owner"></p>
+						<p th:text="${#temporals.format(post.creationDate, 'dd-MM-yyyy HH:mm')}"></p>
+					</a>
 				</div>
 			</div>
 		</div>

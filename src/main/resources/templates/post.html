@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="icon" href="/icon/forum-azul.svg" type="image/svg+xml">
+    <title th:text="${post.topic.title}"></title>
+    <link th:href="@{/css/global.css}" rel="stylesheet"/>
+	<link th:href="@{/css/head.css}" rel="stylesheet"/>
+	
+	<link th:href="@{/css/post.css}" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+	<link th:href="@{/css/footer.css}" rel="stylesheet" />
+</head>
+<body>
+    <div th:insert="~{fragments/header :: header}" ></div>
+	<div th:insert="~{fragments/post-fragment :: post}"></div>
+	<div th:insert="~{fragments/footer :: footer}"></div>
+</body>
+</html>

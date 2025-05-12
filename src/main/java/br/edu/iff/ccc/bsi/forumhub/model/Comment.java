@@ -13,7 +13,9 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
@@ -21,6 +23,8 @@ import lombok.Setter;
 @Setter
 @Table(name = "post_comments")
 @Schema(description = "Comment entity")
+@AllArgsConstructor
+@NoArgsConstructor
 public class Comment extends Interaction implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
