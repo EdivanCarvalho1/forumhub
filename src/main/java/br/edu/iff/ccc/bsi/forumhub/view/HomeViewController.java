@@ -32,7 +32,7 @@ import ch.qos.logback.core.model.Model;
 import jakarta.validation.Valid;
 
 @Controller
-public class ViewController {
+public class HomeViewController {
 
 	@Autowired
 	private PostService postService;
@@ -89,27 +89,6 @@ public class ViewController {
 				LocalDateTime.now(), "ACTIVE", 0);
 		personService.postPerson(p);
 		mv.addObject("message", "Usuário criado com sucesso!");
-		return mv;
-	}
-
-	@GetMapping("/teste")
-	public ModelAndView teste() {
-		ModelAndView mv = new ModelAndView("form-test");
-		return mv;
-	}
-
-	@PostMapping("/teste")
-	public ModelAndView submitForm(@Valid @ModelAttribute("role") Role role, BindingResult result, Model model) {
-		ModelAndView mv = new ModelAndView("form-test");
-
-		if (result.hasErrors()) {
-			mv.addObject("message", "Validation errors occurred!");
-			return mv;
-		}
-
-		roleService.postRole(role);
-		mv.addObject("message", "Role created successfully!");
-
 		return mv;
 	}
 
