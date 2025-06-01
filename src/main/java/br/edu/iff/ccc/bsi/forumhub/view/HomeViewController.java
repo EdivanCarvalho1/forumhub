@@ -37,21 +37,6 @@ public class HomeViewController {
 	@Autowired
 	private PostService postService;
 
-	@Autowired
-	private RoleService roleService;
-
-	@Autowired
-	private PersonService personService;
-	
-	@Autowired
-	private TopicService topicService;
-	
-	@Autowired
-	private CategoryService categoryService;
-	
-	@Autowired
-	private CommentService commentService;
-
 	@GetMapping("/")
 	public ModelAndView home() {
 		ModelAndView mv = new ModelAndView("home");
@@ -65,83 +50,6 @@ public class HomeViewController {
 		mv.addObject("recents", mostRecentPosts);
 
 		return mv;
-	}
-
-	@GetMapping("/login")
-	public ModelAndView login() {
-		ModelAndView mv = new ModelAndView("login");
-		mv.addObject("title", "Login");
-		return mv;
-	}
-
-	@GetMapping("/register")
-	public ModelAndView register() {
-		ModelAndView mv = new ModelAndView("register");
-		mv.addObject("person", new Person());
-		mv.addObject("title", "Register");
-		return mv;
-	}
-
-	@PostMapping("/person")
-	public ModelAndView register(@Valid @ModelAttribute("person") Person person, BindingResult result, Model model) {
-		ModelAndView mv = new ModelAndView("register");
-		Person p = new Person(null, person.getNickname(), person.getEmail(), person.getPassword(), person.getPhone(),
-				LocalDateTime.now(), "ACTIVE", 0);
-		personService.postPerson(p);
-		mv.addObject("message", "Usuário criado com sucesso!");
-		return mv;
-	}
-
-	@GetMapping("/postar")
-	public ModelAndView postar() {
-		ModelAndView mv = new ModelAndView("form-post");
-		mv.addObject("post", new PostDTO());
-		return mv;
-	}
-
-	@PostMapping("/postar")
-	public ModelAndView submitPost(@Valid @ModelAttribute("post") PostDTO post, BindingResult result, Model model) {
-		ModelAndView mv = new ModelAndView("form-post");
-		Category c = new Category(1L, "Geral", LocalDateTime.now(), "Categoria Geral");
-		Topic p = new Topic(null, post.getTitle(), LocalDateTime.now(), c);
-		Person person = new Person(null, "John Doe", "johndoe@email.com", "123456", "999999999",
-				LocalDateTime.of(2021, 10, 1, 15, 0, 0, 0), "ACTIVE", 0);
-		Post pt = new Post(null, 0, 0, post.getContent(), LocalDateTime.now(), person, p);
-		
-		categoryService.postCategory(c);
-		topicService.postTopic(p);
-		postService.postPost(pt);
-		
-		return mv;
-	}
-	@GetMapping("/post/{id}")
-	public ModelAndView post(@PathVariable Long id) {
-        ModelAndView mv = new ModelAndView("post");
-        Post post = postService.findOne(id).orElseThrow(() -> new NotFoundException("Post not found"));
-        List<Comment> comments = commentService.findByPostId(post.getId()).orElseThrow(() -> new NotFoundException("No comments found for this post"));
-        mv.addObject("post", post);
-        mv.addObject("comments", comments);
-        return mv;
-	}
-	@DeleteMapping("/post/{id}")
-	public String deletePost(@PathVariable Long id) {
-		Post post = postService.findOne(id)
-			.orElseThrow(() -> new NotFoundException("Post not found"));
-		postService.deletePost(post.getId());
-		return "redirect:/";
-	}
-	@PostMapping("/comment/{id}")
-	public String postComment(@PathVariable Long id, @RequestParam String content) {
-		Post post = postService.findOne(id).orElseThrow(() -> new NotFoundException("Post not found"));
-		Person person = new Person(null, "John Doe", "johndoe@email.com", "123456", "999999999",
-				LocalDateTime.of(2021, 10, 1, 15, 0, 0, 0), "ACTIVE", 0);
-		Comment comment = new Comment(
-			null, post, 0, 0, content, LocalDateTime.now(), null, person
-		);
-		
-		personService.postPerson(person);
-		commentService.postComment(comment);
-		return "redirect:/post/" + id;
 	}
 
 
