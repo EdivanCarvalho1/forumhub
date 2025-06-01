@@ -151,4 +151,4 @@ CREATE TABLE reply(
     FOREIGN KEY (id_person) REFERENCES person(id_person),
     FOREIGN KEY (id_comment) REFERENCES post_comments(id_comment)
 );
--- );
+```
